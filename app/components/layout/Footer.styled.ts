@@ -88,3 +88,25 @@ export const FooterBottom = styled.div`
   padding-top: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.2);
 `;
+
+export const AdminButton = styled.button`
+  background-color: #fff;
+  color: #000;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  text-decoration: none;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  @media (min-width: 768px) {
+    min-width: 140px;
+  }
+`;
+
