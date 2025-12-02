@@ -1,22 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { Article } from "@/lib/types";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import type { Article } from "@/lib/types";
 
 type UserWithEmail = {
   email?: string | null;
 };
 
-const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL ?? "";
 
 export default function AdminPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
 
   const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingArticles, setLoadingArticles] = useState(true);
   const [form, setForm] = useState({
     title: "",
     slug: "",
@@ -28,15 +28,12 @@ export default function AdminPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (status === "loading") return;
-
-    const email = (session?.user as UserWithEmail | undefined)?.email;
-
-    if (!session || !email || email !== ADMIN_EMAIL) {
-      router.push("/");
-    }
-  }, [session, status, router]);
+  const email = (session?.user as UserWithEmail | undefined)?.email ?? null;
+  const isAdmin =
+    status === "authenticated" &&
+    !!email &&
+    ADMIN_EMAIL.length > 0 &&
+    email === ADMIN_EMAIL;
 
   useEffect(() => {
     async function fetchArticles() {
@@ -59,14 +56,14 @@ export default function AdminPage() {
           setError("Could not load articles.");
         }
       } finally {
-        setLoading(false);
+        setLoadingArticles(false);
       }
     }
 
-    if (status === "authenticated") {
+    if (isAdmin) {
       fetchArticles();
     }
-  }, [status]);
+  }, [isAdmin]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -80,14 +77,21 @@ export default function AdminPage() {
         body: JSON.stringify(form),
       });
 
+      const raw = await res.text();
+
       if (!res.ok) {
-        const data = (await res.json().catch(() => null)) as
-          | { error?: string }
-          | null;
-        throw new Error(data?.error || "Failed to create article");
+        console.error("POST /api/admin/articles error:", res.status, raw);
+        let message = "Failed to create article";
+        try {
+          const data = JSON.parse(raw) as { error?: string };
+          if (data.error) message = data.error;
+        } catch {
+          // ignore
+        }
+        throw new Error(message);
       }
 
-      const newArticle = (await res.json()) as Article;
+      const newArticle = JSON.parse(raw) as Article;
       setArticles((prev) => [newArticle, ...prev]);
 
       setForm({
@@ -110,56 +114,77 @@ export default function AdminPage() {
     }
   }
 
- async function handleDelete(id: string) {
-  if (!confirm("Delete this article?")) return;
+  async function handleDelete(id: string) {
+    if (!confirm("Delete this article?")) return;
 
-  try {
-    console.log("Deleting article with id:", id);
+    try {
+      const res = await fetch(`/api/admin/articles/${id}`, {
+        method: "DELETE",
+      });
 
-    const res = await fetch(`/api/admin/articles/${id}`, {
-      method: "DELETE",
-    });
+      const raw = await res.text();
 
-    const raw = await res.text();
-    console.log(
-      "DELETE /api/admin/articles/[id] response:",
-      res.status,
-      raw
-    );
-
-    if (!res.ok) {
-      let message = "Failed to delete";
-      try {
-        const data = JSON.parse(raw) as { error?: string };
-        if (data.error) message = data.error;
-      } catch {
+      if (!res.ok) {
+        let message = "Failed to delete";
+        try {
+          const data = JSON.parse(raw) as { error?: string };
+          if (data.error) message = data.error;
+        } catch {
+        }
+        throw new Error(message);
       }
-      throw new Error(message);
-    }
 
-    setArticles((prev) => prev.filter((a) => a.id !== id));
-  } catch (err: unknown) {
-    if (err instanceof Error) {
-      console.error(err);
-      alert(err.message);
-    } else {
-      alert("Could not delete article.");
+      setArticles((prev) => prev.filter((a) => a.id !== id));
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        alert(err.message);
+      } else {
+        alert("Could not delete article.");
+      }
     }
   }
-}
-
-
   if (status === "loading") {
     return (
-      <main className="mx-auto max-w-3xl px-4 py-10 text-white">
-        <p>Checking access…</p>
+      <main className="flex h-screen items-center justify-center bg-[#23062E] text-white">
+        <p className="text-sm">Kontrollerar behörighet…</p>
       </main>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-[#23062E] text-white">
+        <div className="w-full max-w-md rounded-2xl bg-black/40 p-6 shadow-xl">
+          <h1 className="text-xl font-semibold">Åtkomst nekad</h1>
+          <p className="mt-2 text-sm text-neutral-200">
+            Den här sidan är endast tillgänglig för administratören av
+            magasinet.
+          </p>
+
+          <p className="mt-4 text-xs text-neutral-300">
+            Om du är admin kan du logga in via <strong>Admin Login</strong> i
+            footern. Annars kan du gå tillbaka till startsidan och fortsätta
+            utforska magasinet.
+          </p>
+
+          <div className="mt-6 flex justify-center">
+            <button
+              type="button"
+              onClick={() => router.push("/")}
+              className="rounded-md bg-white px-4 py-2 text-sm font-medium text-black hover:opacity-90"
+            >
+              Till startsidan
+            </button>
+          </div>
+        </div>
+      </div>
     );
   }
 
   return (
     <main className="mx-auto max-w-4xl px-4 py-10 text-white">
-      <h1 className="mb-4 text-2xl font-semibold">Create new article</h1>
+      <h1 className="mb-4 text-2xl font-semibold">Admin – Articles</h1>
 
       {error && <p className="mb-4 text-sm text-red-400">{error}</p>}
 
@@ -178,7 +203,7 @@ export default function AdminPage() {
               onChange={(e) =>
                 setForm((f) => ({ ...f, title: e.target.value }))
               }
-              className="w-full rounded border border-white/10 bg-black/40 px-2 py-1 text-sm outline-none"
+              className="w-full rounded border border:white border-white/10 bg-black/40 px-2 py-1 text-sm outline-none"
               required
             />
           </div>
@@ -259,10 +284,10 @@ export default function AdminPage() {
           </button>
         </form>
       </section>
-
+      
       <section>
         <h2 className="mb-2 text-lg font-medium">Existing articles</h2>
-        {loading ? (
+        {loadingArticles ? (
           <p className="text-sm text-neutral-300">Loading articles…</p>
         ) : articles.length === 0 ? (
           <p className="text-sm text-neutral-300">No articles yet.</p>
@@ -283,9 +308,9 @@ export default function AdminPage() {
                   <button
                     onClick={() => handleDelete(article.id)}
                     className="rounded bg-red-500 px-3 py-1 text-xs font-medium text-white hover:bg-red-600"
-                        >
+                  >
                     Delete
-                    </button>
+                  </button>
                 </div>
               </li>
             ))}
