@@ -15,10 +15,12 @@ import {
   AdminButton,
 } from "./Footer.styled";
 import { AdminLoginModal } from "../modals/AdminLoginModal";
+import { SubscribeModal } from "../modals/SubscribeModal";
 
 export function Footer() {
   const year = new Date().getFullYear();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isSubscribeOpen, setIsSubscribeOpen] = useState(false);
 
   return (
     <>
@@ -35,27 +37,45 @@ export function Footer() {
 
         <NavWrapper>
           <NavList>
-            <li><NavLink href="/articles">MAGAZINE</NavLink></li>
-            <li><NavLink href="/about">ABOUT</NavLink></li>
-            <li><NavLink href="/creator">CREATOR</NavLink></li>
+            <li>
+              <NavLink href="/articles">MAGAZINE</NavLink>
+            </li>
+            <li>
+              <NavLink href="/about">ABOUT</NavLink>
+            </li>
+            <li>
+              <NavLink href="/creator">CREATOR</NavLink>
+            </li>
           </NavList>
         </NavWrapper>
 
         <ButtonRow>
-          <FooterButton href="/subscribe">Subscribe</FooterButton>
-          <AdminButton onClick={() => setIsLoginOpen(true)}>
+          <FooterButton
+            href="#subscribe"
+            onClick={(e) => {
+              e.preventDefault();
+              setIsSubscribeOpen(true);
+            }}
+          >
+            Subscribe
+          </FooterButton>
+
+          <AdminButton type="button" onClick={() => setIsLoginOpen(true)}>
             Admin Login
           </AdminButton>
         </ButtonRow>
 
-        <FooterBottom>
-          © {year} Double UU. All rights reserved.
-        </FooterBottom>
+        <FooterBottom>© {year} Double UU. All rights reserved.</FooterBottom>
       </FooterRoot>
 
       <AdminLoginModal
         isOpen={isLoginOpen}
         onClose={() => setIsLoginOpen(false)}
+      />
+
+      <SubscribeModal
+        isOpen={isSubscribeOpen}
+        onClose={() => setIsSubscribeOpen(false)}
       />
     </>
   );

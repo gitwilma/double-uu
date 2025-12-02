@@ -1,13 +1,51 @@
 import { NextResponse } from "next/server";
-import { addSubscriber } from "@/lib/repositories/subscriberRepo.mock";
+import { createSubscriber } from "@/lib/repositories/subscriberRepo.mongo";
 
-export async function POST(request: Request) {
-  const { email } = await request.json();
+type SubscribeRequestBody = {
+  email: string;
+  consent?: boolean;
+};
 
-  if (!email || typeof email !== "string") {
-    return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+function isValidEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+export async function POST(req: Request) {
+  try {
+    const body = (await req.json()) as SubscribeRequestBody;
+    const { email, consent } = body;
+
+    if (!email || !isValidEmail(email)) {
+      return NextResponse.json(
+        { error: "Ogiltig e-postadress" },
+        { status: 400 },
+      );
+    }
+
+    if (!consent) {
+      return NextResponse.json(
+        { error: "Måste godkänna prenumeration" },
+        { status: 400 },
+      );
+    }
+
+    const subscriber = await createSubscriber(email);
+
+    return NextResponse.json(
+      {
+        success: true,
+        subscriber: {
+          id: subscriber.id,
+          email: subscriber.email,
+        },
+      },
+      { status: 201 },
+    );
+  } catch (err) {
+    console.error("Subscribe POST error:", err);
+    return NextResponse.json(
+      { error: "Kunde inte spara prenumeration" },
+      { status: 500 },
+    );
   }
-
-  const subscriber = await addSubscriber(email);
-  return NextResponse.json({ ok: true, subscriber });
 }
