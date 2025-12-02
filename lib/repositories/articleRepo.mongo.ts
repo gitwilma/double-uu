@@ -142,3 +142,27 @@ export async function deleteArticle(id: string): Promise<boolean> {
     return false;
   }
 }
+
+export async function getPublishedArticles(): Promise<Article[]> {
+  const client = await clientPromise;
+  const db = client.db();
+
+  const docs = (await db
+    .collection<ArticleDoc>("articles")
+    .find({ status: "published" })
+    .sort({ publishedAt: -1, _id: -1 })
+    .toArray()) as ArticleDoc[];
+
+  return docs.map(mapDocToArticle);
+}
+
+export async function getArticleBySlug(slug: string): Promise<Article | null> {
+  const client = await clientPromise;
+  const db = client.db();
+
+  const doc = (await db
+    .collection<ArticleDoc>("articles")
+    .findOne({ slug })) as ArticleDoc | null;
+
+  return doc ? mapDocToArticle(doc) : null;
+}

@@ -1,4 +1,4 @@
-import { getPublishedArticles } from "@/lib/repositories/articleRepo.mock";
+import { getPublishedArticles } from "@/lib/repositories/articleRepo.mongo";
 import { ArticleCard } from "./ArticleCard";
 
 export default async function ArticlesPage() {

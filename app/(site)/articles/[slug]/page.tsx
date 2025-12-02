@@ -1,4 +1,4 @@
-import { getArticleBySlug } from "@/lib/repositories/articleRepo.mock";
+import { getArticleBySlug } from "@/lib/repositories/articleRepo.mongo";
 import { notFound } from "next/navigation";
 
 interface Props {

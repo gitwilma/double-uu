@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import { ImageImport } from "@/app/components/common/ImageImport";
 import type { Article } from "@/lib/types";
 
 type ArticleCardProps = {
@@ -12,11 +12,11 @@ export function ArticleCard({ article }: ArticleCardProps) {
       <article className="relative overflow-hidden rounded-2xl border border-white/10">
         <div className="relative aspect-[3/4] w-full">
           {article.coverImage && (
-            <Image
+            <ImageImport
               src={article.coverImage}
               alt={article.title}
               fill
-              className="object-cover"
+              className="absolute inset-0 object-cover"
             />
           )}
 
