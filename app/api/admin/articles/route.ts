@@ -7,6 +7,7 @@ import {
   createArticle,
 } from "@/lib/repositories/articleRepo.mongo";
 import type { ArticleStatus } from "@/lib/types";
+import { revalidatePath } from "next/cache";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
@@ -62,6 +63,9 @@ export async function POST(request: Request) {
     status,
     authorId: user.email,
   });
+
+  revalidatePath("/articles");
+  revalidatePath(`/articles/${slug}`);
 
   return NextResponse.json(article, { status: 201 });
 }
