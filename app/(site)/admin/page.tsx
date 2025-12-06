@@ -42,7 +42,6 @@ export default function AdminPage() {
         const raw = await res.text();
 
         if (!res.ok) {
-          console.error("GET /api/admin/articles error:", res.status, raw);
           throw new Error("Failed to load articles");
         }
 
@@ -50,7 +49,6 @@ export default function AdminPage() {
         setArticles(data);
       } catch (err: unknown) {
         if (err instanceof Error) {
-          console.error(err);
           setError(err.message);
         } else {
           setError("Could not load articles.");
@@ -80,7 +78,6 @@ export default function AdminPage() {
       const raw = await res.text();
 
       if (!res.ok) {
-        console.error("POST /api/admin/articles error:", res.status, raw);
         let message = "Failed to create article";
         try {
           const data = JSON.parse(raw) as { error?: string };
@@ -104,7 +101,6 @@ export default function AdminPage() {
       });
     } catch (err: unknown) {
       if (err instanceof Error) {
-        console.error(err);
         setError(err.message);
       } else {
         setError("Something went wrong.");
@@ -130,6 +126,7 @@ export default function AdminPage() {
           const data = JSON.parse(raw) as { error?: string };
           if (data.error) message = data.error;
         } catch {
+          // ignore parse error
         }
         throw new Error(message);
       }
@@ -137,13 +134,13 @@ export default function AdminPage() {
       setArticles((prev) => prev.filter((a) => a.id !== id));
     } catch (err: unknown) {
       if (err instanceof Error) {
-        console.error(err);
         alert(err.message);
       } else {
         alert("Could not delete article.");
       }
     }
   }
+
   if (status === "loading") {
     return (
       <main className="flex h-screen items-center justify-center bg-[#23062E] text-white">
@@ -203,7 +200,7 @@ export default function AdminPage() {
               onChange={(e) =>
                 setForm((f) => ({ ...f, title: e.target.value }))
               }
-              className="w-full rounded border border:white border-white/10 bg-black/40 px-2 py-1 text-sm outline-none"
+              className="w-full rounded border border-white/10 bg-black/40 px-2 py-1 text-sm outline-none"
               required
             />
           </div>
@@ -284,7 +281,7 @@ export default function AdminPage() {
           </button>
         </form>
       </section>
-      
+
       <section>
         <h2 className="mb-2 text-lg font-medium">Existing articles</h2>
         {loadingArticles ? (

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useSession, signOut } from "next-auth/react";
 
 import {
   FooterRoot,
@@ -13,6 +14,7 @@ import {
   FooterButton,
   FooterBottom,
   AdminButton,
+  LogoutButton,
 } from "./Footer.styled";
 import { AdminLoginModal } from "../modals/AdminLoginModal";
 import { SubscribeModal } from "../modals/SubscribeModal";
@@ -21,6 +23,9 @@ export function Footer() {
   const year = new Date().getFullYear();
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSubscribeOpen, setIsSubscribeOpen] = useState(false);
+
+  const { data: session } = useSession();
+  const isLoggedIn = !!session?.user?.email;
 
   return (
     <>
@@ -60,9 +65,18 @@ export function Footer() {
             Subscribe
           </FooterButton>
 
-          <AdminButton type="button" onClick={() => setIsLoginOpen(true)}>
-            Admin Login
-          </AdminButton>
+          {!isLoggedIn ? (
+            <AdminButton type="button" onClick={() => setIsLoginOpen(true)}>
+              Admin Login
+            </AdminButton>
+          ) : (
+            <LogoutButton
+              type="button"
+              onClick={() => signOut({ callbackUrl: "/" })}
+            >
+              Log out
+            </LogoutButton>
+          )}
         </ButtonRow>
 
         <FooterBottom>© {year} Double UU. All rights reserved.</FooterBottom>

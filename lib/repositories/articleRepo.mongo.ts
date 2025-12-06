@@ -121,27 +121,23 @@ export async function deleteArticle(id: string): Promise<boolean> {
   const db = client.db("test");
 
   try {
-    console.log("deleteArticle: db=", db.databaseName, "id=", id);
     let _id: ObjectId;
     try {
       _id = new ObjectId(id);
-    } catch (e) {
-      console.error("deleteArticle: invalid ObjectId", id, e);
+    } catch {
       return false;
     }
-    const res = await db.collection<ArticleDoc>("articles").deleteOne({ _id });
 
-    console.log("deleteArticle result:", {
-      id,
-      deletedCount: res.deletedCount,
-    });
+    const res = await db
+      .collection<ArticleDoc>("articles")
+      .deleteOne({ _id });
 
     return res.deletedCount === 1;
-  } catch (e) {
-    console.error("deleteArticle error for id:", id, e);
+  } catch {
     return false;
   }
 }
+
 
 export async function getPublishedArticles(): Promise<Article[]> {
   const client = await clientPromise;

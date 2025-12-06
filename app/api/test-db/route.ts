@@ -10,8 +10,10 @@ export async function GET() {
     const collectionNames = collections.map((c) => c.collectionName);
 
     return NextResponse.json({ success: true, collections: collectionNames });
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json({ success: false, error: "Could not connect to DB" });
+  } catch {
+    return NextResponse.json({
+      success: false,
+      error: "Could not connect to DB",
+    });
   }
 }

@@ -110,3 +110,16 @@ export const AdminButton = styled.button`
   }
 `;
 
+export const LogoutButton = styled.button.attrs({ type: "button" })`
+  background-color: #e11d48;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;

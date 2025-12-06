@@ -39,8 +39,7 @@ export function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProps) {
 
       onClose();
       router.push("/admin");
-    } catch (err) {
-      console.error(err);
+    } catch {
       setErrorMessage("Något gick fel. Försök igen.");
     } finally {
       setLoading(false);

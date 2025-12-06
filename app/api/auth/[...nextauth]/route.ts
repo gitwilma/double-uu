@@ -1,4 +1,3 @@
-// app/api/auth/[...nextauth]/route.ts
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -15,11 +14,7 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials) return null;
-
-        if (!ADMIN_EMAIL || !ADMIN_PASSWORD) {
-          console.error("ADMIN_EMAIL or ADMIN_PASSWORD not set in env");
-          return null;
-        }
+        if (!ADMIN_EMAIL || !ADMIN_PASSWORD) return null;
 
         const email = credentials.email?.toLowerCase().trim();
         const password = credentials.password;

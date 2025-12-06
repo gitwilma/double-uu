@@ -18,14 +18,14 @@ export async function POST(req: Request) {
     if (!email || !isValidEmail(email)) {
       return NextResponse.json(
         { error: "Ogiltig e-postadress" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
     if (!consent) {
       return NextResponse.json(
         { error: "Måste godkänna prenumeration" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -39,13 +39,12 @@ export async function POST(req: Request) {
           email: subscriber.email,
         },
       },
-      { status: 201 },
+      { status: 201 }
     );
-  } catch (err) {
-    console.error("Subscribe POST error:", err);
+  } catch {
     return NextResponse.json(
       { error: "Kunde inte spara prenumeration" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
