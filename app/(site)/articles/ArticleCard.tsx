@@ -1,6 +1,14 @@
 import type { Article } from "@/lib/types";
 import { ImageImport } from "@/app/components/common/ImageImport";
-import { CardLink, CardShell, Media, Overlay, Meta } from "./styled";
+import {
+  CardLink,
+  CardShell,
+  Media,
+  Overlay,
+  TitleBlock,
+  Title,
+  Subtitle,
+} from "./styled";
 
 type Props = {
   article: Article;
@@ -11,7 +19,7 @@ type Props = {
 export function ArticleCard({ article, side, progress }: Props) {
   return (
     <CardLink href={`/articles/${article.slug}`}>
-      <CardShell $side={side} $progress={progress} aria-label={article.title}>
+      <CardShell $side={side} $progress={progress}>
         <Media>
           {article.coverImage && (
             <ImageImport
@@ -23,12 +31,21 @@ export function ArticleCard({ article, side, progress }: Props) {
           )}
           <Overlay />
         </Media>
-
-        <Meta>
-          <h2>{article.title}</h2>
-          {article.excerpt ? <p>{article.excerpt}</p> : null}
-        </Meta>
       </CardShell>
+      
+      <TitleBlock $side={side} $progress={progress}>
+        {side === "right" ? (
+          <>
+            {article.excerpt ? <Subtitle>{article.excerpt}</Subtitle> : null}
+            <Title>{article.title}</Title>
+          </>
+        ) : (
+          <>
+            <Title>{article.title}</Title>
+            {article.excerpt ? <Subtitle>{article.excerpt}</Subtitle> : null}
+          </>
+        )}
+      </TitleBlock>
     </CardLink>
   );
 }

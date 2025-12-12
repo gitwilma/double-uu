@@ -18,6 +18,9 @@ export const Viewport = styled.section`
 export const ViewportInner = styled.div`
   position: relative;
   height: 100%;
+  --cardW: min(450px, calc(100vw - 40px));
+  --edge: 40px;
+  --gap: 28px;
 `;
 
 export const CardLink = styled(Link)`
@@ -41,25 +44,28 @@ export const CardShell = styled.article<{
   border: 1px solid rgba(255, 255, 255, 0.10);
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
 
-  ${({ $side }) => ($side === "left" ? css`left: 40px;` : css`right: 40px;`)}
+  ${({ $side }) =>
+    $side === "left"
+      ? css`left: 40px;`
+      : css`right: 40px;`}
 
-${({ $side, $progress }) => {
-  const p = Math.max(0, Math.min(1, $progress));
-  const cardWidth = 450;
-  const extra = 80;
-  const startOffset = cardWidth + extra;
+  ${({ $side, $progress }) => {
+    const p = Math.max(0, Math.min(1, $progress));
 
-  const x = ($side === "left" ? -1 : 1) * (1 - p) * startOffset;
-  const y = -50;
+    const cardWidth = 450;
+    const extra = 80;
+    const startOffset = cardWidth + extra;
 
-  return css`
-    opacity: 1;
-    transform: translate3d(${x}px, ${y}%, 0);
-    transition: transform 0.05s linear;
-    will-change: transform;
-  `;
-}}
+    const x = ($side === "left" ? -1 : 1) * (1 - p) * startOffset;
+    const y = -50;
 
+    return css`
+      opacity: 1;
+      transform: translate3d(${x}px, ${y}%, 0);
+      transition: transform 0.05s linear;
+      will-change: transform;
+    `;
+  }}
 
   @media (max-width: 900px) {
     position: relative;
@@ -95,24 +101,66 @@ export const Overlay = styled.div`
   }
 `;
 
-export const Meta = styled.div`
+export const TitleBlock = styled.div<{
+  $side: "left" | "right";
+  $progress: number;
+}>`
   position: absolute;
-  inset: auto 0 0 0;
-  padding: 16px;
-  pointer-events: none;
+  z-index: 5;
+  max-width: 420px;
 
-  h2 {
-    margin: 0;
-    color: #fff;
-    font-size: 18px;
-    font-weight: 650;
-    letter-spacing: 0.2px;
-  }
+  ${({ $side }) =>
+    $side === "left"
+      ? css`
+          left: calc(var(--edge) + var(--cardW) + var(--gap));
+          top: 18vh;
+          text-align: left;
+        `
+      : css`
+          right: calc(var(--edge) + var(--cardW) + var(--gap));
+          bottom: 16vh;
+          text-align: right;
+        `}
 
-  p {
-    margin: 10px 0 0;
-    color: rgba(255,255,255,0.85);
-    font-size: 14px;
-    line-height: 1.4;
+${({ $progress }) => {
+  const p = Math.max(0, Math.min(1, $progress));
+
+  const delay = 0.25;
+  const ramp = Math.max(0, Math.min(1, (p - delay) / (1 - delay)));
+
+  return css`
+    opacity: ${ramp};
+    transition: opacity 1s linear;
+    will-change: opacity;
+  `;
+}}
+
+  @media (max-width: 900px) {
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    margin: 12px auto 24px;
+    max-width: 520px;
+    text-align: left;
+    opacity: 1;
+    transition: none;
   }
+`;
+
+export const Title = styled.h2`
+  margin: 0;
+  color: #000;
+  font-size: clamp(42px, 6vw, 64px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+`;
+
+export const Subtitle = styled.p`
+  margin: 10px 0 0;
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 16px;
+  line-height: 1.35;
 `;
