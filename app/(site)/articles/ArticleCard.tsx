@@ -5,13 +5,13 @@ import { CardLink, CardShell, Media, Overlay, Meta } from "./styled";
 type Props = {
   article: Article;
   side: "left" | "right";
-  active: boolean;
+  progress: number;
 };
 
-export function ArticleCard({ article, side, active }: Props) {
+export function ArticleCard({ article, side, progress }: Props) {
   return (
     <CardLink href={`/articles/${article.slug}`}>
-      <CardShell $side={side} $active={active} aria-label={article.title}>
+      <CardShell $side={side} $progress={progress} aria-label={article.title}>
         <Media>
           {article.coverImage && (
             <ImageImport

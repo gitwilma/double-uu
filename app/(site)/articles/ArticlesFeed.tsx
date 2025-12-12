@@ -3,9 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Article } from "@/lib/types";
 import { ArticleCard } from "./ArticleCard";
-import { Page, Viewport, ViewportInner, Spacer } from "./styled";
-
-type Props = { articles: Article[] };
+import { Page, Spacer, Viewport, ViewportInner } from "./styled";
 
 function chunkPairs<T>(arr: T[]) {
   const out: Array<[T, T?]> = [];
@@ -13,51 +11,61 @@ function chunkPairs<T>(arr: T[]) {
   return out;
 }
 
-export default function ArticlesFeed({ articles }: Props) {
+function clamp01(n: number) {
+  return Math.max(0, Math.min(1, n));
+}
+
+export default function ArticlesFeed({ articles }: { articles: Article[] }) {
   const pairs = useMemo(() => chunkPairs(articles), [articles]);
   const viewportRefs = useRef<Array<HTMLElement | null>>([]);
-  const [active, setActive] = useState<Record<number, boolean>>({});
+  const [progressByIdx, setProgressByIdx] = useState<Record<number, number>>({});
 
   useEffect(() => {
-    const nodes = viewportRefs.current.filter(Boolean) as HTMLElement[];
-    if (!nodes.length) return;
+    let raf = 0;
 
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          const idx = Number(e.target.getAttribute("data-idx"));
-          if (Number.isNaN(idx)) return;
-          if (e.isIntersecting) setActive((s) => ({ ...s, [idx]: true }));
-        });
-      },
-      { threshold: 0.35 }
-    );
+    const update = () => {
+      const vh = window.innerHeight;
+      const startEarlier = 0.15;
 
-    nodes.forEach((n) => io.observe(n));
-    return () => io.disconnect();
-  }, [pairs.length]);
+      const next: Record<number, number> = {};
+
+      viewportRefs.current.forEach((el, idx) => {
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const p = clamp01((vh - rect.top) / (vh * (1 - startEarlier)));
+        next[idx] = p;
+      });
+
+      setProgressByIdx(next);
+      raf = requestAnimationFrame(update);
+    };
+
+    raf = requestAnimationFrame(update);
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   return (
     <Page>
       <Spacer />
+      {pairs.map(([left, right], idx) => {
+        const p = progressByIdx[idx] ?? 0;
 
-      {pairs.map(([left, right], idx) => (
-        <Viewport
-          key={`${left.id}-${right?.id ?? "none"}`}
-          ref={(el) => {
-            viewportRefs.current[idx] = el;
-          }}
-          data-idx={idx}
-        >
-          <ViewportInner>
-            <ArticleCard article={left} side="left" active={!!active[idx]} />
-
-            {right ? (
-              <ArticleCard article={right} side="right" active={!!active[idx]} />
-            ) : null}
-          </ViewportInner>
-        </Viewport>
-      ))}
+        return (
+          <Viewport
+            key={`${left.id}-${right?.id ?? "none"}`}
+            ref={(el) => {
+              viewportRefs.current[idx] = el;
+            }}
+          >
+            <ViewportInner>
+              <ArticleCard article={left} side="left" progress={p} />
+              {right ? (
+                <ArticleCard article={right} side="right" progress={p} />
+              ) : null}
+            </ViewportInner>
+          </Viewport>
+        );
+      })}
     </Page>
   );
 }

@@ -1,15 +1,5 @@
-import styled, { css, keyframes } from "styled-components";
+import styled, { css } from "styled-components";
 import Link from "next/link";
-
-const slideInLeft = keyframes`
-  from { transform: translate3d(-80px, -50%, 0); opacity: 0; }
-  to   { transform: translate3d(0, -50%, 0); opacity: 1; }
-`;
-
-const slideInRight = keyframes`
-  from { transform: translate3d(80px, -50%, 0); opacity: 0; }
-  to   { transform: translate3d(0, -50%, 0); opacity: 1; }
-`;
 
 export const Page = styled.div`
   min-height: 100vh;
@@ -34,9 +24,13 @@ export const CardLink = styled(Link)`
   display: contents;
 `;
 
-export const CardShell = styled.article<{ $side: "left" | "right"; $active: boolean }>`
+export const CardShell = styled.article<{
+  $side: "left" | "right";
+  $progress: number;
+}>`
   position: absolute;
   top: 50%;
+
   width: min(450px, calc(100vw - 40px));
   height: min(515px, calc(100vh - 120px));
   max-width: 450px;
@@ -44,22 +38,28 @@ export const CardShell = styled.article<{ $side: "left" | "right"; $active: bool
 
   border-radius: 24px;
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.10);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
 
-  ${({ $side }) =>
-    $side === "left"
-      ? css`left: 20px;`
-      : css`right: 20px;`}
+  ${({ $side }) => ($side === "left" ? css`left: 40px;` : css`right: 40px;`)}
 
-  opacity: ${({ $active }) => ($active ? 1 : 0)};
-  transform: translate3d(0, -50%, 0);
+${({ $side, $progress }) => {
+  const p = Math.max(0, Math.min(1, $progress));
+  const cardWidth = 450;
+  const extra = 80;
+  const startOffset = cardWidth + extra;
 
-  ${({ $active, $side }) =>
-    $active &&
-    css`
-      animation: ${$side === "left" ? slideInLeft : slideInRight} 700ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
-    `}
+  const x = ($side === "left" ? -1 : 1) * (1 - p) * startOffset;
+  const y = -50;
+
+  return css`
+    opacity: 1;
+    transform: translate3d(${x}px, ${y}%, 0);
+    transition: transform 0.05s linear;
+    will-change: transform;
+  `;
+}}
+
 
   @media (max-width: 900px) {
     position: relative;
@@ -74,7 +74,7 @@ export const CardShell = styled.article<{ $side: "left" | "right"; $active: bool
     max-width: 520px;
 
     opacity: 1;
-    animation: none;
+    transition: none;
   }
 `;
 
