@@ -8,9 +8,9 @@ interface Props {
 export default async function ArticlePage({ params }: Props) {
   const article = await getArticleBySlug(params.slug);
 
-  if (!article || article.status !== "published") {
-    notFound();
-  }
+ if (!article) {
+  notFound();
+}
 
   return (
     <main className="mx-auto max-w-3xl px-4 py-10">

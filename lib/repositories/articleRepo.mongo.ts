@@ -1,5 +1,5 @@
 import clientPromise from "@/lib/mongodb";
-import type { Article, ArticleStatus } from "@/lib/types";
+import type { Article } from "@/lib/types";
 import { ObjectId } from "mongodb";
 
 type ArticleDoc = Omit<Article, "id"> & {
@@ -15,7 +15,6 @@ function mapDocToArticle(doc: ArticleDoc): Article {
     content: doc.content,
     coverImage: doc.coverImage,
     tags: doc.tags,
-    status: doc.status,
     publishedAt: doc.publishedAt,
     authorId: doc.authorId,
   };
@@ -28,7 +27,7 @@ export async function getAllArticles(): Promise<Article[]> {
   const docs = (await db
     .collection<ArticleDoc>("articles")
     .find({})
-    .sort({ _id: -1 })
+    .sort({ publishedAt: -1, _id: -1 })
     .toArray()) as ArticleDoc[];
 
   return docs.map(mapDocToArticle);
@@ -54,13 +53,10 @@ type CreateArticleParams = {
   content: string;
   coverImage?: string;
   tags?: string[];
-  status?: ArticleStatus;
   authorId: string;
 };
 
-export async function createArticle(
-  input: CreateArticleParams
-): Promise<Article> {
+export async function createArticle(input: CreateArticleParams): Promise<Article> {
   const client = await clientPromise;
   const db = client.db("test");
 
@@ -73,9 +69,7 @@ export async function createArticle(
     content: input.content,
     coverImage: input.coverImage,
     tags: input.tags ?? [],
-    status: input.status ?? "draft",
-    publishedAt:
-      input.status === "published" ? now : undefined,
+    publishedAt: now,
     authorId: input.authorId,
   };
 
@@ -101,10 +95,6 @@ export async function updateArticle(
 
   const update: Partial<ArticleDoc> = { ...input } as Partial<ArticleDoc>;
 
-  if (input.status === "published" && !input.publishedAt) {
-    update.publishedAt = new Date().toISOString();
-  }
-
   await db
     .collection<ArticleDoc>("articles")
     .updateOne({ _id }, { $set: update });
@@ -128,24 +118,20 @@ export async function deleteArticle(id: string): Promise<boolean> {
       return false;
     }
 
-    const res = await db
-      .collection<ArticleDoc>("articles")
-      .deleteOne({ _id });
-
+    const res = await db.collection<ArticleDoc>("articles").deleteOne({ _id });
     return res.deletedCount === 1;
   } catch {
     return false;
   }
 }
 
-
 export async function getPublishedArticles(): Promise<Article[]> {
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db("test");
 
   const docs = (await db
     .collection<ArticleDoc>("articles")
-    .find({ status: "published" })
+    .find({})
     .sort({ publishedAt: -1, _id: -1 })
     .toArray()) as ArticleDoc[];
 
@@ -154,7 +140,7 @@ export async function getPublishedArticles(): Promise<Article[]> {
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db("test");
 
   const doc = (await db
     .collection<ArticleDoc>("articles")

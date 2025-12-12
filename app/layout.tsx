@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "./providers";
+import StyledComponentsRegistry from "./StyledComponentsRegistry";
 
 export const metadata: Metadata = {
   title: "Double UU",
@@ -15,9 +16,9 @@ export default function RootLayout({
   return (
     <html lang="sv">
       <body>
-        <Providers>
-          {children}
-        </Providers>
+        <StyledComponentsRegistry>
+          <Providers>{children}</Providers>
+        </StyledComponentsRegistry>
       </body>
     </html>
   );

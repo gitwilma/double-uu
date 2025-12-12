@@ -1,16 +1,18 @@
-import Link from "next/link";
-import { ImageImport } from "@/app/components/common/ImageImport";
 import type { Article } from "@/lib/types";
+import { ImageImport } from "@/app/components/common/ImageImport";
+import { CardLink, CardShell, Media, Overlay, Meta } from "./styled";
 
-type ArticleCardProps = {
+type Props = {
   article: Article;
+  side: "left" | "right";
+  active: boolean;
 };
 
-export function ArticleCard({ article }: ArticleCardProps) {
+export function ArticleCard({ article, side, active }: Props) {
   return (
-    <Link href={`/articles/${article.slug}`} className="group block">
-      <article className="relative overflow-hidden rounded-2xl border border-white/10">
-        <div className="relative aspect-[3/4] w-full">
+    <CardLink href={`/articles/${article.slug}`}>
+      <CardShell $side={side} $active={active} aria-label={article.title}>
+        <Media>
           {article.coverImage && (
             <ImageImport
               src={article.coverImage}
@@ -19,20 +21,14 @@ export function ArticleCard({ article }: ArticleCardProps) {
               className="absolute inset-0 object-cover"
             />
           )}
+          <Overlay />
+        </Media>
 
-          <div className="absolute inset-0 bg-black/60 transition-colors duration-300 group-hover:bg-black/0" />
-          <div className="pointer-events-none absolute inset-0 flex flex-col justify-end p-4">
-            <h2 className="text-lg font-semibold text-white">
-              {article.title}
-            </h2>
-            {article.excerpt && (
-              <p className="mt-2 text-sm text-neutral-200">
-                {article.excerpt}
-              </p>
-            )}
-          </div>
-        </div>
-      </article>
-    </Link>
+        <Meta>
+          <h2>{article.title}</h2>
+          {article.excerpt ? <p>{article.excerpt}</p> : null}
+        </Meta>
+      </CardShell>
+    </CardLink>
   );
 }

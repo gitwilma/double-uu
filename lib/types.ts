@@ -1,5 +1,3 @@
-export type ArticleStatus = "draft" | "published";
-
 export interface Article {
   id: string;
   slug: string;
@@ -8,7 +6,6 @@ export interface Article {
   content: string;
   coverImage?: string;
   tags?: string[];
-  status: ArticleStatus;
   publishedAt?: string;
   authorId: string;
 }

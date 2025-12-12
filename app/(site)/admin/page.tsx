@@ -23,7 +23,6 @@ export default function AdminPage() {
     excerpt: "",
     content: "",
     coverImage: "",
-    status: "draft",
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -97,7 +96,6 @@ export default function AdminPage() {
         excerpt: "",
         content: "",
         coverImage: "",
-        status: "draft",
       });
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -258,20 +256,6 @@ export default function AdminPage() {
             />
           </div>
 
-          <div>
-            <label className="mb-1 block text-xs">Status</label>
-            <select
-              value={form.status}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, status: e.target.value }))
-              }
-              className="w-full rounded border border-white/10 bg-black/40 px-2 py-1 text-sm outline-none"
-            >
-              <option value="draft">Draft</option>
-              <option value="published">Published</option>
-            </select>
-          </div>
-
           <button
             type="submit"
             disabled={saving}
@@ -298,7 +282,7 @@ export default function AdminPage() {
                 <div>
                   <p className="text-sm font-medium">{article.title}</p>
                   <p className="text-xs text-neutral-400">
-                    {article.slug} · {article.status}
+                    {article.slug}
                   </p>
                 </div>
                 <div className="flex gap-2">
