@@ -4,6 +4,7 @@ import type { DefaultSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getAllArticles, createArticle } from "@/lib/repositories/articleRepo.mongo";
 import { revalidatePath } from "next/cache";
+import { ArticleSection } from "@/lib/types";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 type SessionUser = DefaultSession["user"];
@@ -12,9 +13,10 @@ type CreateArticleRequest = {
   title: string;
   slug: string;
   excerpt?: string;
-  content: string;
   coverImage?: string;
   tags?: string[];
+  sections: ArticleSection[];
+
 };
 
 function isAdmin(session: any, user?: SessionUser) {
@@ -42,19 +44,56 @@ export async function POST(request: Request) {
   }
 
   const body = (await request.json()) as CreateArticleRequest;
-  const { title, slug, excerpt, content, coverImage, tags } = body;
 
-  if (!title || !slug || !content) {
-    return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+  const {
+    title,
+    slug,
+    excerpt,
+    coverImage,
+    tags,
+    sections,
+  } = body;
+
+  if (!title || !slug) {
+    return NextResponse.json(
+      { error: "Missing required fields" },
+      { status: 400 }
+    );
+  }
+
+  if (!Array.isArray(sections) || sections.length < 1 || sections.length > 3) {
+    return NextResponse.json(
+      { error: "Sections must be 1–3 items" },
+      { status: 400 }
+    );
+  }
+
+  const hasAtLeastOneImage = sections.some(
+    (s) => !!s.image?.trim()
+  );
+  if (!hasAtLeastOneImage) {
+    return NextResponse.json(
+      { error: "At least one section must include an image" },
+      { status: 400 }
+    );
+  }
+
+  for (const s of sections) {
+    if (!s.subtitle?.trim() || !s.body?.trim()) {
+      return NextResponse.json(
+        { error: "Each section needs subtitle + body" },
+        { status: 400 }
+      );
+    }
   }
 
   const article = await createArticle({
     title,
     slug,
     excerpt: excerpt ?? "",
-    content,
     coverImage,
     tags,
+    sections,
     authorId: user!.email!,
   });
 

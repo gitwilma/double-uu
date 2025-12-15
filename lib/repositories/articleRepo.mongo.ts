@@ -1,5 +1,6 @@
 import clientPromise from "@/lib/mongodb";
 import type { Article } from "@/lib/types";
+import type { ArticleSection } from "@/lib/types";
 import { ObjectId } from "mongodb";
 
 type ArticleDoc = Omit<Article, "id"> & {
@@ -12,11 +13,12 @@ function mapDocToArticle(doc: ArticleDoc): Article {
     slug: doc.slug,
     title: doc.title,
     excerpt: doc.excerpt,
-    content: doc.content,
     coverImage: doc.coverImage,
     tags: doc.tags,
     publishedAt: doc.publishedAt,
     authorId: doc.authorId,
+    sections: (doc as any).sections ?? [],
+
   };
 }
 
@@ -50,10 +52,11 @@ type CreateArticleParams = {
   title: string;
   slug: string;
   excerpt: string;
-  content: string;
   coverImage?: string;
   tags?: string[];
   authorId: string;
+
+   sections: ArticleSection[];
 };
 
 export async function createArticle(input: CreateArticleParams): Promise<Article> {
@@ -66,11 +69,12 @@ export async function createArticle(input: CreateArticleParams): Promise<Article
     title: input.title,
     slug: input.slug,
     excerpt: input.excerpt,
-    content: input.content,
     coverImage: input.coverImage,
     tags: input.tags ?? [],
     publishedAt: now,
     authorId: input.authorId,
+
+    sections: input.sections,
   };
 
   const result = await db

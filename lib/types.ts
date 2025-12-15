@@ -1,14 +1,22 @@
+export type ArticleSection = {
+  image?: string;
+  subtitle: string;
+  body: string;
+};
+
 export interface Article {
   id: string;
   slug: string;
   title: string;
   excerpt: string;
-  content: string;
   coverImage?: string;
   tags?: string[];
   publishedAt?: string;
   authorId: string;
+
+  sections: ArticleSection[];
 }
+
 
 export interface User {
   id: string;

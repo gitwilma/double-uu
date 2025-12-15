@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import type { Article } from "@/lib/types";
+import type { Article, ArticleSection } from "@/lib/types";
 
 type UserWithEmail = {
   email?: string | null;
@@ -16,14 +16,21 @@ export default function AdminPage() {
   const router = useRouter();
 
   const [articles, setArticles] = useState<Article[]>([]);
-  const [loadingArticles, setLoadingArticles] = useState(true);
-  const [form, setForm] = useState({
+
+  const [form, setForm] = useState<{
+    title: string;
+    slug: string;
+    excerpt: string;
+    coverImage: string;
+    sections: ArticleSection[];
+  }>({
     title: "",
     slug: "",
     excerpt: "",
-    content: "",
     coverImage: "",
+    sections: [{ image: "", subtitle: "", body: "" }],
   });
+
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,29 +45,46 @@ export default function AdminPage() {
     async function fetchArticles() {
       try {
         const res = await fetch("/api/admin/articles");
-        const raw = await res.text();
-
-        if (!res.ok) {
-          throw new Error("Failed to load articles");
-        }
-
-        const data = JSON.parse(raw) as Article[];
+        if (!res.ok) throw new Error("Failed to load articles");
+        const data = (await res.json()) as Article[];
         setArticles(data);
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("Could not load articles.");
-        }
-      } finally {
-        setLoadingArticles(false);
+      } catch (err: any) {
+        setError(err.message ?? "Could not load articles.");
       }
     }
 
-    if (isAdmin) {
-      fetchArticles();
-    }
+    if (isAdmin) fetchArticles();
   }, [isAdmin]);
+
+  function updateSection(
+    index: number,
+    field: keyof ArticleSection,
+    value: string
+  ) {
+    setForm((f) => {
+      const next = [...f.sections];
+      next[index] = { ...next[index], [field]: value };
+      return { ...f, sections: next };
+    });
+  }
+
+  function addSection() {
+    setForm((f) =>
+      f.sections.length >= 3
+        ? f
+        : {
+            ...f,
+            sections: [...f.sections, { image: "", subtitle: "", body: "" }],
+          }
+    );
+  }
+
+  function removeSection(index: number) {
+    setForm((f) => ({
+      ...f,
+      sections: f.sections.filter((_, i) => i !== index),
+    }));
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -74,35 +98,19 @@ export default function AdminPage() {
         body: JSON.stringify(form),
       });
 
-      const raw = await res.text();
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error ?? "Failed to create article");
 
-      if (!res.ok) {
-        let message = "Failed to create article";
-        try {
-          const data = JSON.parse(raw) as { error?: string };
-          if (data.error) message = data.error;
-        } catch {
-          // ignore
-        }
-        throw new Error(message);
-      }
-
-      const newArticle = JSON.parse(raw) as Article;
-      setArticles((prev) => [newArticle, ...prev]);
-
+      setArticles((prev) => [data, ...prev]);
       setForm({
         title: "",
         slug: "",
         excerpt: "",
-        content: "",
         coverImage: "",
+        sections: [{ image: "", subtitle: "", body: "" }],
       });
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Something went wrong.");
-      }
+    } catch (err: any) {
+      setError(err.message ?? "Something went wrong.");
     } finally {
       setSaving(false);
     }
@@ -110,33 +118,8 @@ export default function AdminPage() {
 
   async function handleDelete(id: string) {
     if (!confirm("Delete this article?")) return;
-
-    try {
-      const res = await fetch(`/api/admin/articles/${id}`, {
-        method: "DELETE",
-      });
-
-      const raw = await res.text();
-
-      if (!res.ok) {
-        let message = "Failed to delete";
-        try {
-          const data = JSON.parse(raw) as { error?: string };
-          if (data.error) message = data.error;
-        } catch {
-          // ignore parse error
-        }
-        throw new Error(message);
-      }
-
-      setArticles((prev) => prev.filter((a) => a.id !== id));
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        alert(err.message);
-      } else {
-        alert("Could not delete article.");
-      }
-    }
+    await fetch(`/api/admin/articles/${id}`, { method: "DELETE" });
+    setArticles((prev) => prev.filter((a) => a.id !== id));
   }
 
   if (status === "loading") {
@@ -150,29 +133,12 @@ export default function AdminPage() {
   if (!isAdmin) {
     return (
       <div className="flex h-screen items-center justify-center bg-[#23062E] text-white">
-        <div className="w-full max-w-md rounded-2xl bg-black/40 p-6 shadow-xl">
-          <h1 className="text-xl font-semibold">Åtkomst nekad</h1>
-          <p className="mt-2 text-sm text-neutral-200">
-            Den här sidan är endast tillgänglig för administratören av
-            magasinet.
-          </p>
-
-          <p className="mt-4 text-xs text-neutral-300">
-            Om du är admin kan du logga in via <strong>Admin Login</strong> i
-            footern. Annars kan du gå tillbaka till startsidan och fortsätta
-            utforska magasinet.
-          </p>
-
-          <div className="mt-6 flex justify-center">
-            <button
-              type="button"
-              onClick={() => router.push("/")}
-              className="rounded-md bg-white px-4 py-2 text-sm font-medium text-black hover:opacity-90"
-            >
-              Till startsidan
-            </button>
-          </div>
-        </div>
+        <button
+          onClick={() => router.push("/")}
+          className="rounded bg-white px-4 py-2 text-black"
+        >
+          Till startsidan
+        </button>
       </div>
     );
   }
@@ -183,121 +149,114 @@ export default function AdminPage() {
 
       {error && <p className="mb-4 text-sm text-red-400">{error}</p>}
 
-      <section className="mb-10">
-        <h2 className="mb-2 text-lg font-medium">Create new article</h2>
+      <form
+        onSubmit={handleSubmit}
+        className="mb-10 space-y-4 rounded-lg border border-white/10 p-4"
+      >
+        <input
+          placeholder="Title"
+          value={form.title}
+          onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+          className="w-full rounded bg-black/40 px-2 py-1"
+          required
+        />
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-3 rounded-lg border border-white/10 p-4"
-        >
-          <div>
-            <label className="mb-1 block text-xs">Title</label>
+        <input
+          placeholder="Slug"
+          value={form.slug}
+          onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
+          className="w-full rounded bg-black/40 px-2 py-1"
+          required
+        />
+
+        <textarea
+          placeholder="Excerpt"
+          value={form.excerpt}
+          onChange={(e) => setForm((f) => ({ ...f, excerpt: e.target.value }))}
+          className="w-full rounded bg-black/40 px-2 py-1"
+          rows={2}
+        />
+
+        <input
+          placeholder="Cover image URL"
+          value={form.coverImage}
+          onChange={(e) =>
+            setForm((f) => ({ ...f, coverImage: e.target.value }))
+          }
+          className="w-full rounded bg-black/40 px-2 py-1"
+        />
+
+        <hr className="border-white/10" />
+
+        {form.sections.map((s, i) => (
+          <div key={i} className="space-y-2 rounded border border-white/10 p-3">
             <input
-              type="text"
-              value={form.title}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, title: e.target.value }))
-              }
-              className="w-full rounded border border-white/10 bg-black/40 px-2 py-1 text-sm outline-none"
-              required
+              placeholder="Section image URL"
+              value={s.image}
+              onChange={(e) => updateSection(i, "image", e.target.value)}
+              className="w-full rounded bg-black/40 px-2 py-1"
             />
-          </div>
-
-          <div>
-            <label className="mb-1 block text-xs">Slug</label>
             <input
-              type="text"
-              value={form.slug}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, slug: e.target.value }))
-              }
-              className="w-full rounded border border-white/10 bg-black/40 px-2 py-1 text-sm outline-none"
-              placeholder="forsta-numret"
-              required
+              placeholder="Subtitle"
+              value={s.subtitle}
+              onChange={(e) => updateSection(i, "subtitle", e.target.value)}
+              className="w-full rounded bg-black/40 px-2 py-1"
             />
-          </div>
-
-          <div>
-            <label className="mb-1 block text-xs">Excerpt</label>
             <textarea
-              value={form.excerpt}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, excerpt: e.target.value }))
-              }
-              className="w-full rounded border border-white/10 bg-black/40 px-2 py-1 text-sm outline-none"
-              rows={2}
+              placeholder="Body text"
+              value={s.body}
+              onChange={(e) => updateSection(i, "body", e.target.value)}
+              rows={3}
+              className="w-full rounded bg-black/40 px-2 py-1"
             />
-          </div>
 
-          <div>
-            <label className="mb-1 block text-xs">Content</label>
-            <textarea
-              value={form.content}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, content: e.target.value }))
-              }
-              className="w-full rounded border border-white/10 bg-black/40 px-2 py-1 text-sm outline-none"
-              rows={4}
-              required
-            />
-          </div>
-
-          <div>
-            <label className="mb-1 block text-xs">
-              Cover image URL (optional)
-            </label>
-            <input
-              type="text"
-              value={form.coverImage}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, coverImage: e.target.value }))
-              }
-              className="w-full rounded border border-white/10 bg-black/40 px-2 py-1 text-sm outline-none"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={saving}
-            className="rounded bg-white px-4 py-2 text-sm font-medium text-black disabled:opacity-60"
-          >
-            {saving ? "Saving…" : "Create article"}
-          </button>
-        </form>
-      </section>
-
-      <section>
-        <h2 className="mb-2 text-lg font-medium">Existing articles</h2>
-        {loadingArticles ? (
-          <p className="text-sm text-neutral-300">Loading articles…</p>
-        ) : articles.length === 0 ? (
-          <p className="text-sm text-neutral-300">No articles yet.</p>
-        ) : (
-          <ul className="space-y-3">
-            {articles.map((article) => (
-              <li
-                key={article.id}
-                className="flex items-start justify-between rounded border border-white/10 px-3 py-2"
+            {form.sections.length > 1 && (
+              <button
+                type="button"
+                onClick={() => removeSection(i)}
+                className="text-xs text-red-400"
               >
-                <div>
-                  <p className="text-sm font-medium">{article.title}</p>
-                  <p className="text-xs text-neutral-400">
-                    {article.slug}
-                  </p>
-                </div>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => handleDelete(article.id)}
-                    className="rounded bg-red-500 px-3 py-1 text-xs font-medium text-white hover:bg-red-600"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+                Remove section
+              </button>
+            )}
+          </div>
+        ))}
+
+        {form.sections.length < 3 && (
+          <button
+            type="button"
+            onClick={addSection}
+            className="text-sm underline"
+          >
+            + Add section
+          </button>
         )}
-      </section>
+
+        <button
+          type="submit"
+          disabled={saving}
+          className="rounded bg-white px-4 py-2 text-black"
+        >
+          {saving ? "Saving…" : "Create article"}
+        </button>
+      </form>
+
+      <ul className="space-y-2">
+        {articles.map((a) => (
+          <li
+            key={a.id}
+            className="flex justify-between rounded border border-white/10 px-3 py-2"
+          >
+            <span>{a.title}</span>
+            <button
+              onClick={() => handleDelete(a.id)}
+              className="text-xs text-red-400"
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
     </main>
   );
 }

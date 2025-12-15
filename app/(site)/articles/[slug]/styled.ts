@@ -92,3 +92,53 @@ export const Body = styled.article`
     margin: 0 0 18px;
   }
 `;
+
+export const Section = styled.section<{ $flip: boolean }>`
+  display: grid;
+  gap: 28px;
+  margin: 64px 0;
+
+  @media (min-width: 900px) {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+
+    ${({ $flip }) =>
+      $flip &&
+      `
+        direction: rtl;
+
+        & > * {
+          direction: ltr;
+        }
+      `}
+  }
+`;
+
+export const SectionImage = styled.div`
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border-radius: 24px;
+  overflow: hidden;
+
+  box-shadow: 0 28px 60px -18px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+`;
+
+export const SectionText = styled.div`
+  max-width: 46ch;
+
+  h2 {
+    margin: 0 0 12px;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    margin: 0;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+`;
+

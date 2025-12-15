@@ -1,7 +1,7 @@
 import { getArticleBySlug } from "@/lib/repositories/articleRepo.mongo";
 import { notFound } from "next/navigation";
 import { ImageImport } from "@/app/components/common/ImageImport";
-import { Page, Inner, Hero, Cover, Head, Title, MetaRow, Body } from "./styled";
+import { Page, Inner, Hero, Cover, Head, Title, MetaRow, Body, Section, SectionImage, SectionText } from "./styled";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -43,9 +43,29 @@ export default async function ArticlePage({ params }: Props) {
           </Head>
         </Hero>
 
-        <Body>
-          <p>{article.content}</p>
-        </Body>
+       <Body>
+        {article.sections.map((section, index) => (
+          <Section key={index} $flip={index % 2 === 1}>
+            {section.image && (
+              <SectionImage>
+                <ImageImport
+                  src={section.image}
+                  alt={section.subtitle}
+                  fill
+                  className="absolute inset-0 object-cover"
+                />
+              </SectionImage>
+          )}
+
+              <SectionText>
+                <h2>{section.subtitle}</h2>
+                <p>{section.body}</p>
+                </SectionText>
+            </Section>
+          ))}
+      </Body>
+
+
       </Inner>
     </Page>
   );
