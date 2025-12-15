@@ -126,25 +126,18 @@ export async function deleteArticle(id: string): Promise<boolean> {
 }
 
 export async function getPublishedArticles(): Promise<Article[]> {
-  const client = await clientPromise;
-  const db = client.db("test");
-
-  const docs = (await db
-    .collection<ArticleDoc>("articles")
-    .find({})
-    .sort({ publishedAt: -1, _id: -1 })
-    .toArray()) as ArticleDoc[];
-
-  return docs.map(mapDocToArticle);
+  return getAllArticles();
 }
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
   const client = await clientPromise;
   const db = client.db("test");
 
-  const doc = (await db
+  const doc = await db
     .collection<ArticleDoc>("articles")
-    .findOne({ slug })) as ArticleDoc | null;
+    .findOne({ slug });
 
   return doc ? mapDocToArticle(doc) : null;
 }
+
+

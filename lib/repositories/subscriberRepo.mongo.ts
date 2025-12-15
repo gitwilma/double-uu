@@ -22,7 +22,7 @@ function mapDocToSubscriber(doc: SubscriberDoc): Subscriber {
 
 export async function createSubscriber(email: string): Promise<Subscriber> {
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db("test");
   const col = db.collection<SubscriberDoc>("subscribers");
 
   const normalizedEmail = email.trim().toLowerCase();
@@ -54,7 +54,7 @@ export async function createSubscriber(email: string): Promise<Subscriber> {
 
 export async function getAllSubscribers(): Promise<Subscriber[]> {
   const client = await clientPromise;
-  const db = client.db();
+  const db = client.db("test");
   const col = db.collection<SubscriberDoc>("subscribers");
 
   const docs = (await col

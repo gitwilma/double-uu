@@ -1,28 +1,52 @@
 import { getArticleBySlug } from "@/lib/repositories/articleRepo.mongo";
 import { notFound } from "next/navigation";
+import { ImageImport } from "@/app/components/common/ImageImport";
+import { Page, Inner, Hero, Cover, Head, Title, MetaRow, Body } from "./styled";
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export default async function ArticlePage({ params }: Props) {
-  const article = await getArticleBySlug(params.slug);
+  const { slug } = await params;
 
- if (!article) {
-  notFound();
-}
+  const article = await getArticleBySlug(slug);
 
+  if (!article) {
+    notFound();
+  }
   return (
-    <main className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="text-3xl font-semibold">{article.title}</h1>
-      {article.publishedAt && (
-        <p className="mt-2 text-xs text-neutral-400">
-          Publicerad {new Date(article.publishedAt).toLocaleDateString("sv-SE")}
-        </p>
-      )}
-      <article className="prose prose-invert mt-6 max-w-none">
-        <p>{article.content}</p>
-      </article>
-    </main>
+    <Page>
+      <Inner>
+        <Hero>
+          {article.coverImage ? (
+            <Cover>
+              <ImageImport
+                src={article.coverImage}
+                alt={article.title}
+                fill
+                className="absolute inset-0 object-cover"
+                priority
+              />
+            </Cover>
+          ) : null}
+
+          <Head>
+            <Title>{article.title}</Title>
+
+            {article.publishedAt ? (
+              <MetaRow>
+                Publicerad{" "}
+                {new Date(article.publishedAt).toLocaleDateString("sv-SE")}
+              </MetaRow>
+            ) : null}
+          </Head>
+        </Hero>
+
+        <Body>
+          <p>{article.content}</p>
+        </Body>
+      </Inner>
+    </Page>
   );
 }
