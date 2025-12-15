@@ -8,11 +8,7 @@ export const metadata: Metadata = {
   description: "Double UU Project by Wilma Håkansson",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="sv">
       <body>

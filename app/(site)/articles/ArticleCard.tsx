@@ -4,7 +4,6 @@ import {
   CardLink,
   CardShell,
   Media,
-  Overlay,
   TitleBlock,
   Title,
   Subtitle,
@@ -29,10 +28,9 @@ export function ArticleCard({ article, side, progress }: Props) {
               className="absolute inset-0 object-cover"
             />
           )}
-          <Overlay />
         </Media>
       </CardShell>
-      
+
       <TitleBlock $side={side} $progress={progress}>
         {side === "right" ? (
           <>
