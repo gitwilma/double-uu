@@ -7,49 +7,28 @@ export const Page = styled.div`
   overflow: hidden;
 
   background:
-    radial-gradient(
-      60% 50% at 40% 20%,
-      #f7b78d 0%,
-      transparent 60%
-    ),
-    radial-gradient(
-      55% 45% at 85% 15%,
-      #f4a9c8 0%,
-      transparent 60%
-    ),
-    radial-gradient(
-      45% 45% at 25% 75%,
-      #f2b3d6 0%,
-      transparent 65%
-    ),
-    radial-gradient(
-      40% 40% at 50% 50%,
-      #d7c8f5 0%,
-      transparent 70%
-    ),
+    radial-gradient(60% 50% at 40% 20%, #f7b78d 0%, transparent 60%),
+    radial-gradient(55% 45% at 85% 15%, #f4a9c8 0%, transparent 60%),
+    radial-gradient(45% 45% at 25% 75%, #f2b3d6 0%, transparent 65%),
+    radial-gradient(40% 40% at 50% 50%, #d7c8f5 0%, transparent 70%),
     #f4a9c8;
 
-&::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
+  &::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
 
-  /* 👇 VIKTIGT */
-  z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 260px 260px;
+    background-repeat: repeat;
 
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-  background-size: 260px 260px;
-  background-repeat: repeat;
-
-  mix-blend-mode: soft-light;
-  opacity: 0.85;
-  filter: contrast(160%) brightness(105%);
-}
-
-
+    mix-blend-mode: soft-light;
+    opacity: 0.85;
+    filter: contrast(160%) brightness(105%);
+  }
 `;
-
 
 export const Spacer = styled.div`
   height: 24px;
@@ -63,7 +42,10 @@ export const Viewport = styled.section`
 export const ViewportInner = styled.div`
   position: relative;
   height: 100%;
+
+  /* default för /articles */
   --cardW: min(450px, calc(100vw - 40px));
+  --cardH: min(515px, calc(100vh - 120px));
   --edge: 40px;
   --gap: 28px;
 `;
@@ -80,27 +62,18 @@ export const CardShell = styled.article<{
   z-index: 2;
   top: 50%;
 
-  width: min(450px, calc(100vw - 40px));
-  height: min(515px, calc(100vh - 120px));
-  max-width: 450px;
-  max-height: 515px;
+  width: var(--cardW);
+  height: var(--cardH);
 
   overflow: hidden;
   box-shadow: 0 60px 40px -18px rgba(0, 0, 0, 0.45);
 
-
   ${({ $side }) =>
-    $side === "left"
-      ? css`left: 40px;`
-      : css`right: 40px;`}
+    $side === "left" ? css`left: var(--edge);` : css`right: var(--edge);`}
 
   ${({ $side, $progress }) => {
     const p = Math.max(0, Math.min(1, $progress));
-
-    const cardWidth = 450;
-    const extra = 80;
-    const startOffset = cardWidth + extra;
-
+    const startOffset = 760;
     const x = ($side === "left" ? -1 : 1) * (1 - p) * startOffset;
     const y = -50;
 
@@ -120,7 +93,6 @@ export const CardShell = styled.article<{
     transform: none;
     margin: 0 auto 24px;
     height: auto;
-    max-height: none;
     width: calc(100vw - 32px);
     max-width: 520px;
 
@@ -156,18 +128,17 @@ export const TitleBlock = styled.div<{
           text-align: right;
         `}
 
-${({ $progress }) => {
-  const p = Math.max(0, Math.min(1, $progress));
+  ${({ $progress }) => {
+    const p = Math.max(0, Math.min(1, $progress));
+    const delay = 0.25;
+    const ramp = Math.max(0, Math.min(1, (p - delay) / (1 - delay)));
 
-  const delay = 0.25;
-  const ramp = Math.max(0, Math.min(1, (p - delay) / (1 - delay)));
-
-  return css`
-    opacity: ${ramp};
-    transition: opacity 1s linear;
-    will-change: opacity;
-  `;
-}}
+    return css`
+      opacity: ${ramp};
+      transition: opacity 1s linear;
+      will-change: opacity;
+    `;
+  }}
 
   @media (max-width: 900px) {
     position: relative;

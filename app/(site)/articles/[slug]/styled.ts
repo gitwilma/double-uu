@@ -33,31 +33,33 @@ export const Page = styled.main`
 export const Inner = styled.div`
   position: relative;
   z-index: 2;
-  max-width: 980px;
+  max-width: 1080px;
   margin: 0 auto;
   padding: 110px 20px 80px;
 `;
 
-export const Hero = styled.section`
+export const Hero = styled.header`
   display: grid;
   grid-template-columns: 1fr;
   gap: 22px;
+  align-items: start;
 
   @media (min-width: 900px) {
-    grid-template-columns: 420px 1fr;
-    align-items: end;
-    gap: 34px;
+    grid-template-columns: 520px 1fr;
+    gap: 40px;
+    align-items: start;
   }
 `;
 
-export const Cover = styled.div`
+export const Cover = styled.figure`
+  margin: 0;
   width: 100%;
-  max-width: 420px;
+  max-width: 520px;
   aspect-ratio: 3 / 4;
   border-radius: 24px;
   overflow: hidden;
 
-  box-shadow: 0 28px 60px -18px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 32px 70px -26px rgba(0, 0, 0, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.18);
 
   position: relative;
@@ -65,80 +67,23 @@ export const Cover = styled.div`
 
 export const Head = styled.div`
   color: #111;
+  align-self: start;
 `;
 
 export const Title = styled.h1`
   margin: 0;
-  font-weight: 800;
+  font-weight: 850;
   letter-spacing: -0.03em;
   line-height: 0.95;
-  font-size: clamp(44px, 6.5vw, 78px);
+  font-size: clamp(44px, 6.5vw, 82px);
 `;
 
-export const MetaRow = styled.div`
-  margin-top: 10px;
+export const MetaRow = styled.p`
+  margin: 12px 0 0;
   font-size: 12px;
   color: rgba(0, 0, 0, 0.72);
 `;
 
 export const Body = styled.article`
-  margin-top: 34px;
-  max-width: 70ch;
-  color: rgba(0, 0, 0, 0.88);
-  font-size: 18px;
-  line-height: 1.65;
-
-  p {
-    margin: 0 0 18px;
-  }
+  margin-top: 38px;
 `;
-
-export const Section = styled.section<{ $flip: boolean }>`
-  display: grid;
-  gap: 28px;
-  margin: 64px 0;
-
-  @media (min-width: 900px) {
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-
-    ${({ $flip }) =>
-      $flip &&
-      `
-        direction: rtl;
-
-        & > * {
-          direction: ltr;
-        }
-      `}
-  }
-`;
-
-export const SectionImage = styled.div`
-  position: relative;
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  border-radius: 24px;
-  overflow: hidden;
-
-  box-shadow: 0 28px 60px -18px rgba(0, 0, 0, 0.45);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-`;
-
-export const SectionText = styled.div`
-  max-width: 46ch;
-
-  h2 {
-    margin: 0 0 12px;
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-
-  p {
-    margin: 0;
-    font-size: 17px;
-    line-height: 1.6;
-  }
-`;
-
