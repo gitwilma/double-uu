@@ -132,12 +132,13 @@ export const TitleBlock = styled.div<{
 `;
 
 export const Title = styled.h2`
+font-family: var(--font-title);
+font-weight: 400;
   margin: 0;
   color: #000;
   font-size: clamp(42px, 6vw, 64px);
   line-height: 0.95;
   letter-spacing: -0.02em;
-  font-weight: 700;
 `;
 
 export const Subtitle = styled.p`
@@ -146,3 +147,16 @@ export const Subtitle = styled.p`
   font-size: 16px;
   line-height: 1.35;
 `;
+
+export const DateLabel = styled.time`
+  display: block;
+  margin-bottom: 6px;
+
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.55);
+`;
+

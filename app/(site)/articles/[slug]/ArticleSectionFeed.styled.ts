@@ -145,12 +145,13 @@ export const TextPanel = styled.aside<{ $side: "left" | "right"; $progress: numb
 `;
 
 export const SectionTitle = styled.h2`
+font-family: var(--font-title);
+font-weight: 400;
   margin: 0;
   color: #111;
   font-size: 28px;
   line-height: 1.05;
   letter-spacing: -0.02em;
-  font-weight: 800;
 `;
 
 export const SectionBody = styled.p`

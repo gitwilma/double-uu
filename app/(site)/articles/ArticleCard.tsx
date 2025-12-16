@@ -7,6 +7,7 @@ import {
   TitleBlock,
   Title,
   Subtitle,
+  DateLabel,
 } from "./styled";
 
 type Props = {
@@ -32,18 +33,16 @@ export function ArticleCard({ article, side, progress }: Props) {
       </CardShell>
 
       <TitleBlock $side={side} $progress={progress}>
-        {side === "right" ? (
-          <>
-            {article.excerpt ? <Subtitle>{article.excerpt}</Subtitle> : null}
-            <Title>{article.title}</Title>
-          </>
-        ) : (
-          <>
-            <Title>{article.title}</Title>
-            {article.excerpt ? <Subtitle>{article.excerpt}</Subtitle> : null}
-          </>
-        )}
-      </TitleBlock>
+  {article.publishedAt && (
+    <DateLabel dateTime={article.publishedAt}>
+      {new Date(article.publishedAt).toLocaleDateString("sv-SE")}
+    </DateLabel>
+  )}
+
+  <Title>{article.title}</Title>
+
+  {article.excerpt ? <Subtitle>{article.excerpt}</Subtitle> : null}
+</TitleBlock>
     </CardLink>
   );
 }

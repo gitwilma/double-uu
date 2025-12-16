@@ -49,8 +49,9 @@ export const Head = styled.div`
 `;
 
 export const Title = styled.h1`
+font-family: var(--font-title);
+font-weight: 400;
   margin: 0;
-  font-weight: 850;
   letter-spacing: -0.03em;
   line-height: 0.95;
   font-size: clamp(44px, 6.5vw, 82px);
