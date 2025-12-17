@@ -2,7 +2,7 @@ import { getArticleBySlug } from "@/lib/repositories/articleRepo.mongo";
 import { notFound } from "next/navigation";
 import { ImageImport } from "@/app/components/common/ImageImport";
 import ArticleSectionsFeed from "./ArticleSectionFeed";
-import { Page, Inner, Hero, Cover, Head, Title, MetaRow, Body } from "./styled";
+import { Page, Inner, Hero, Cover, Head, Title, MetaRow, Body, Excerpt } from "./styled";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -30,14 +30,17 @@ export default async function ArticlePage({ params }: Props) {
             </Cover>
           ) : null}
 
-          <Head>
-            <Title>{article.title}</Title>
+              <Head>
             {article.publishedAt ? (
               <MetaRow>
                 Publicerad{" "}
                 {new Date(article.publishedAt).toLocaleDateString("sv-SE")}
               </MetaRow>
             ) : null}
+
+            <Title>{article.title}</Title>
+
+            {article.excerpt ? <Excerpt>{article.excerpt}</Excerpt> : null}
           </Head>
         </Hero>
 

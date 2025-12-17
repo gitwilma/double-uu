@@ -36,6 +36,7 @@ export const ViewportInner = styled.div`
   position: relative;
   height: 100%;
   --cardW: 520px;
+  --cardH: min(640px, calc(100vh - 220px));
   --edge: 18px;
   --gap: 22px;
 
@@ -61,22 +62,19 @@ export const CardShell = styled.article<{
   $side: "left" | "right";
   $progress: number;
 }>`
-
   position: absolute;
   top: 12vh;
   z-index: 2;
 
   width: var(--cardW);
-  height: min(640px, calc(100vh - 220px));
+  height: var(--cardH);
 
   overflow: hidden;
   border-radius: 24px;
   box-shadow: 0 60px 40px -18px rgba(0, 0, 0, 0.45);
 
   ${({ $side }) =>
-    $side === "left"
-      ? css`left: var(--edge);`
-      : css`right: var(--edge);`}
+    $side === "left" ? css`left: var(--edge);` : css`right: var(--edge);`}
 
   ${({ $side, $progress }) => {
     const p = Math.max(0, Math.min(1, $progress));
@@ -89,14 +87,15 @@ export const CardShell = styled.article<{
     `;
   }}
 
-${media.tablet} {
-  position: relative;
-  inset: auto;
-  transform: none;
+  ${media.tablet} {
+    position: relative;
+    inset: auto;
+    transform: none;
 
-  grid-area: ${({ $side }) =>
-    $side === "left" ? "media" : "media"};
-}
+    grid-area: media;
+    width: 100%;
+    height: var(--cardH);
+  }
 
   ${media.mobile} {
     position: relative;
@@ -111,20 +110,25 @@ ${media.tablet} {
 export const Media = styled.div`
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 5;
+  height: 100%;
+
+  ${media.mobile} {
+    aspect-ratio: 4 / 5;
+    height: auto;
+  }
 `;
 
 export const TextPanel = styled.aside<{
   $side: "left" | "right";
   $progress: number;
 }>`
-
   position: absolute;
   top: 12vh;
   z-index: 3;
 
-  width: 420px;
-  max-height: min(520px, calc(100vh - 240px));
+  width: var(--cardW);
+  height: var(--cardH);
+
   overflow: auto;
 
   padding: ${spacing.md};
@@ -147,30 +151,33 @@ export const TextPanel = styled.aside<{
   ${({ $progress }) => {
     const p = Math.max(0, Math.min(1, $progress));
     const ramp = Math.max(0, Math.min(1, (p - 0.18) / 0.82));
-    return css`opacity: ${ramp};`;
+    return css`
+      opacity: ${ramp};
+    `;
   }}
 
-${media.tablet} {
-  position: relative;
-  inset: auto;
+  ${media.tablet} {
+    position: relative;
+    inset: auto;
 
-  grid-area: ${({ $side }) =>
-    $side === "left" ? "text" : "text"};
+    grid-area: text;
+    width: 100%;
+    height: var(--cardH);
 
-  width: 100%;
-  max-height: none;
-  opacity: 1;
-  transition: none;
-  text-align: left;
-}
+    opacity: 1;
+    transition: none;
+    text-align: left;
+  }
 
   ${media.mobile} {
     position: relative;
     inset: auto;
     opacity: 1;
-
+    
     width: 100%;
-    max-height: none;
+    height: auto;
+    overflow: visible;
+
     text-align: left;
   }
 `;

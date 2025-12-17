@@ -1,5 +1,7 @@
 "use client";
 
+import { media } from "@/lib/styles/media";
+import { typography } from "@/lib/styles/typography";
 import styled from "styled-components";
 
 export const Page = styled.main`
@@ -65,4 +67,16 @@ export const MetaRow = styled.p`
 
 export const Body = styled.article`
   margin-top: 38px;
+`;
+
+export const Excerpt = styled.p`
+  margin: 12px 0 0;
+  font-family: ${typography.body.family};
+  line-height: ${typography.body.lineHeight};
+  color: rgba(0, 0, 0, 0.82);
+  max-width: 60ch;
+
+  ${media.mobile} {
+    margin-top: 10px;
+  }
 `;
