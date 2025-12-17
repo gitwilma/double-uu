@@ -1,46 +1,73 @@
 "use client";
 
 import styled, { css } from "styled-components";
+import { media } from "@/lib/styles/media";
+import { spacing } from "@/lib/styles/spacing";
+import { typography } from "@/lib/styles/typography";
 
 export const Feed = styled.section`
-  margin-top: 32px;
+  margin-top: ${spacing.xl};
   display: grid;
   gap: 120px;
 
-  @media (max-width: 900px) {
-    gap: 64px;
+  ${media.tablet} {
+    gap: ${spacing.xxl};
+  }
+
+  ${media.mobile} {
+    gap: ${spacing.xl};
   }
 `;
 
 export const Viewport = styled.section`
   min-height: 100vh;
   position: relative;
-  display: grid;
-  align-items: start;
+
+  ${media.tablet} {
+    min-height: auto;
+  }
+
+  ${media.mobile} {
+    min-height: auto;
+  }
 `;
 
 export const ViewportInner = styled.div`
   position: relative;
   height: 100%;
-  --cardW: min(520px, calc(100vw - 32px));
+  --cardW: 520px;
   --edge: 18px;
   --gap: 22px;
 
-  @media (max-width: 900px) {
-    --edge: 0px;
+  ${media.tablet} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas: "media text";
+    column-gap: 32px;
+    align-items: start;
+  }
+
+  ${media.mobile} {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "media"
+      "text";
+    gap: ${spacing.md};
   }
 `;
 
-export const CardShell = styled.article<{ $side: "left" | "right"; $progress: number }>`
+export const CardShell = styled.article<{
+  $side: "left" | "right";
+  $progress: number;
+}>`
+
   position: absolute;
-  z-index: 2;
   top: 12vh;
+  z-index: 2;
 
   width: var(--cardW);
-  max-width: 520px;
-
   height: min(640px, calc(100vh - 220px));
-  max-height: 640px;
 
   overflow: hidden;
   border-radius: 24px;
@@ -53,68 +80,58 @@ export const CardShell = styled.article<{ $side: "left" | "right"; $progress: nu
 
   ${({ $side, $progress }) => {
     const p = Math.max(0, Math.min(1, $progress));
-
-    const cardWidth = 520;
-    const extra = 60;
-    const startOffset = cardWidth + extra;
-
+    const startOffset = 580;
     const x = ($side === "left" ? -1 : 1) * (1 - p) * startOffset;
 
     return css`
       transform: translate3d(${x}px, 0, 0);
       transition: transform 0.05s linear;
-      will-change: transform;
     `;
   }}
 
-  @media (max-width: 900px) {
+${media.tablet} {
+  position: relative;
+  inset: auto;
+  transform: none;
+
+  grid-area: ${({ $side }) =>
+    $side === "left" ? "media" : "media"};
+}
+
+  ${media.mobile} {
     position: relative;
-    top: auto;
-    left: auto;
-    right: auto;
+    inset: auto;
     transform: none;
-    height: auto;
-    max-height: none;
+
     width: 100%;
-    max-width: 560px;
-    margin: 0 auto;
-    transition: none;
+    height: auto;
   }
 `;
 
 export const Media = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 4 / 5;
 `;
 
-export const TextPanel = styled.aside<{ $side: "left" | "right"; $progress: number }>`
-  position: absolute;
-  z-index: 3;
-  top: 12vh;
+export const TextPanel = styled.aside<{
+  $side: "left" | "right";
+  $progress: number;
+}>`
 
-  width: min(420px, calc(100vw - 32px));
+  position: absolute;
+  top: 12vh;
+  z-index: 3;
+
+  width: 420px;
   max-height: min(520px, calc(100vh - 240px));
   overflow: auto;
 
-  padding: 18px 18px 16px;
+  padding: ${spacing.md};
   border-radius: 18px;
 
   background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.45);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-
-  ${({ $progress }) => {
-    const p = Math.max(0, Math.min(1, $progress));
-    const delay = 0.18;
-    const ramp = Math.max(0, Math.min(1, (p - delay) / (1 - delay)));
-    return css`
-      opacity: ${ramp};
-      transition: opacity 0.8s linear;
-      will-change: opacity;
-    `;
-  }}
 
   ${({ $side }) =>
     $side === "left"
@@ -127,36 +144,48 @@ export const TextPanel = styled.aside<{ $side: "left" | "right"; $progress: numb
           text-align: right;
         `}
 
-  scrollbar-gutter: stable both-edges;
+  ${({ $progress }) => {
+    const p = Math.max(0, Math.min(1, $progress));
+    const ramp = Math.max(0, Math.min(1, (p - 0.18) / 0.82));
+    return css`opacity: ${ramp};`;
+  }}
 
-  @media (max-width: 900px) {
+${media.tablet} {
+  position: relative;
+  inset: auto;
+
+  grid-area: ${({ $side }) =>
+    $side === "left" ? "text" : "text"};
+
+  width: 100%;
+  max-height: none;
+  opacity: 1;
+  transition: none;
+  text-align: left;
+}
+
+  ${media.mobile} {
     position: relative;
-    top: auto;
-    left: auto;
-    right: auto;
-    width: 100%;
-    max-width: 560px;
-    max-height: none;
-    margin: 14px auto 0;
+    inset: auto;
     opacity: 1;
-    transition: none;
+
+    width: 100%;
+    max-height: none;
     text-align: left;
   }
 `;
 
 export const SectionTitle = styled.h2`
-font-family: var(--font-title);
-font-weight: 400;
   margin: 0;
-  color: #111;
+  font-family: ${typography.title.family};
+  font-weight: ${typography.title.weight};
   font-size: 28px;
-  line-height: 1.05;
-  letter-spacing: -0.02em;
+  line-height: 1.1;
 `;
 
 export const SectionBody = styled.p`
-  margin: 12px 0 0;
+  margin-top: ${spacing.sm};
+  font-family: ${typography.body.family};
+  line-height: ${typography.body.lineHeight};
   color: rgba(0, 0, 0, 0.86);
-  font-size: 16px;
-  line-height: 1.6;
 `;

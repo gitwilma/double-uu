@@ -140,7 +140,6 @@ export const CardShell = styled.article<{
 
   margin: 0;
 }
-
 `;
 
 export const TitleBlock = styled.div<{
