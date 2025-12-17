@@ -23,9 +23,9 @@ export const Viewport = styled.section`
     padding: ${spacing.xl} 0;
   }
 
-  ${media.mobile} {
+ ${media.mobile} {
     height: auto;
-    padding: ${spacing.lg} 0;
+    padding: ${spacing.xl} 0;
   }
 `;
 
@@ -55,7 +55,7 @@ export const ViewportInner = styled.div`
     height: auto;
     display: grid;
     grid-template-columns: 1fr;
-    gap: ${spacing.xl};
+    gap: ${spacing.xxl};
     padding: 0 ${spacing.md};
 
     --cardW: 100%;
@@ -82,7 +82,7 @@ export const CardLink = styled(Link)`
     `}
 }
 
-  ${media.mobile} {
+   ${media.mobile} {
     display: block;
   }
 `;
@@ -127,9 +127,20 @@ export const CardShell = styled.article<{
   height: auto;
 }
 
-  ${media.mobile} {
-    display: block;
-  }
+    ${media.mobile} {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+
+  transform: none;
+
+  width: 100%;
+  height: auto;
+
+  margin: 0;
+}
+
 `;
 
 export const TitleBlock = styled.div<{
@@ -181,13 +192,19 @@ export const TitleBlock = styled.div<{
   }
 
   ${media.mobile} {
-    position: relative;
-    margin-top: ${spacing.sm};
-    max-width: 100%;
-    text-align: left;
-    opacity: 1;
-    transition: none;
-  }
+  position: relative;
+  left: auto;
+  right: auto;
+  top: auto;
+  bottom: auto;
+
+  margin-top: ${spacing.md};
+  max-width: 100%;
+  width: 100%;
+
+  text-align: left;
+  opacity: 1;
+}
 `;
 
 export const DateLabel = styled.time`
@@ -229,8 +246,11 @@ export const Media = styled.div`
     aspect-ratio: 4 / 5;
   }
 
+ 
   ${media.mobile} {
     aspect-ratio: 4 / 5;
+    border-radius: 18px;
+    overflow: hidden;
   }
 `;
 
