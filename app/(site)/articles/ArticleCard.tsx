@@ -3,12 +3,12 @@ import { ImageImport } from "@/app/components/common/ImageImport";
 import {
   CardLink,
   CardShell,
-  Media,
   TitleBlock,
   Title,
   Subtitle,
   DateLabel,
 } from "./styled";
+import { Media } from "./[slug]/ArticleSectionFeed.styled";
 
 type Props = {
   article: Article;
@@ -17,6 +17,10 @@ type Props = {
 };
 
 export function ArticleCard({ article, side, progress }: Props) {
+  const date = article.publishedAt
+    ? new Date(article.publishedAt).toLocaleDateString("sv-SE")
+    : null;
+
   return (
     <CardLink href={`/articles/${article.slug}`}>
       <CardShell $side={side} $progress={progress}>
@@ -33,16 +37,24 @@ export function ArticleCard({ article, side, progress }: Props) {
       </CardShell>
 
       <TitleBlock $side={side} $progress={progress}>
-  {article.publishedAt && (
-    <DateLabel dateTime={article.publishedAt}>
-      {new Date(article.publishedAt).toLocaleDateString("sv-SE")}
-    </DateLabel>
-  )}
-
-  <Title>{article.title}</Title>
-
-  {article.excerpt ? <Subtitle>{article.excerpt}</Subtitle> : null}
-</TitleBlock>
+        {side === "left" ? (
+          <>
+            {date && (
+              <DateLabel $side={side} dateTime={article.publishedAt!}>{date}</DateLabel>
+            )}
+            <Title>{article.title}</Title>
+            {article.excerpt ? <Subtitle $side={side}>{article.excerpt}</Subtitle> : null}
+          </>
+        ) : (
+          <>
+            {article.excerpt ? <Subtitle $side={side}>{article.excerpt}</Subtitle> : null}
+            <Title>{article.title}</Title>
+            {date && (
+              <DateLabel $side={side} dateTime={article.publishedAt!}>{date}</DateLabel>
+            )}
+          </>
+        )}
+      </TitleBlock>
     </CardLink>
   );
 }

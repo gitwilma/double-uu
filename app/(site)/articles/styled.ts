@@ -65,28 +65,6 @@ export const ViewportInner = styled.div`
   }
 `;
 
-export const CardLink = styled(Link)`
-  display: contents;
-
- ${media.tablet} {
-  ${({ href }) =>
-    typeof href === "string" &&
-    css`
-      &:nth-of-type(even) {
-        direction: rtl;
-
-        > * {
-          direction: ltr;
-        }
-      }
-    `}
-}
-
-   ${media.mobile} {
-    display: block;
-  }
-`;
-
 export const CardShell = styled.article<{
   $side: "left" | "right";
   $progress: number;
@@ -206,7 +184,7 @@ export const TitleBlock = styled.div<{
 }
 `;
 
-export const DateLabel = styled.time`
+export const DateLabel = styled.time<{ $side?: "left" | "right" }>`
   display: block;
   margin-bottom: 6px;
 
@@ -215,6 +193,19 @@ export const DateLabel = styled.time`
   letter-spacing: ${typography.meta.tracking};
   text-transform: uppercase;
   color: rgba(0, 0, 0, 0.55);
+
+   ${({ $side }) =>
+    $side === "right" &&
+    css`
+      text-align: right;
+    `}
+
+  ${media.tablet} {
+    text-align: left;
+  }
+  ${media.mobile} {
+    text-align: left;
+  }
 `;
 
 export const Title = styled.h2`
@@ -229,27 +220,68 @@ export const Title = styled.h2`
   color: #000;
 `;
 
-export const Subtitle = styled.p`
+export const Subtitle = styled.p<{ $side?: "left" | "right" }>`
   margin-top: ${spacing.xs};
   font-family: ${typography.body.family};
   line-height: ${typography.body.lineHeight};
   color: rgba(0, 0, 0, 0.85);
-`;
 
-export const Media = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
+   ${({ $side }) =>
+    $side === "right" &&
+    css`
+      text-align: right;
+    `}
+
+  opacity: 0;
+  transform: translateY(6px);
+  pointer-events: none;
+
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
 
   ${media.tablet} {
-    aspect-ratio: 4 / 5;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    text-align: left;
   }
 
- 
   ${media.mobile} {
-    aspect-ratio: 4 / 5;
-    border-radius: 18px;
-    overflow: hidden;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    text-align: left;
   }
 `;
+
+export const CardLink = styled(Link)`
+  display: contents;
+
+  &:hover ${Subtitle},
+  &:focus-visible ${Subtitle} {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+ ${media.tablet} {
+  ${({ href }) =>
+    typeof href === "string" &&
+    css`
+      &:nth-of-type(even) {
+        direction: rtl;
+
+        > * {
+          direction: ltr;
+        }
+      }
+    `}
+}
+
+   ${media.mobile} {
+    display: block;
+  }
+`;
+
 
