@@ -32,3 +32,12 @@ export interface Subscriber {
   confirmed: boolean;
   unsubscribed: boolean;
 }
+
+export type AboutContent = {
+  id: string;
+  title: string;
+  coverImage?: string;
+  sections: ArticleSection[];
+  updatedAt: string;
+};
+

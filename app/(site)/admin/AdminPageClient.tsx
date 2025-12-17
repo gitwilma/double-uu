@@ -16,6 +16,7 @@ import {
 import { ArticleForm } from "./components/ArticleForm";
 import { MonthPicker } from "./components/MonthPicker";
 import { ArticleList } from "./components/ArticleList";
+import { AboutForm } from "./components/AboutForm";
 
 type UserWithEmail = {
   email?: string | null;
@@ -123,6 +124,8 @@ export default function AdminPageClient() {
         onView={(slug) => router.push(`/articles/${slug}`)}
         onDelete={deleteArticle}
       />
+
+      <AboutForm />
     </Page>
   );
 }

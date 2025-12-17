@@ -1,5 +1,5 @@
 import AdminPageClient from "./AdminPageClient";
 
 export default function AdminPage() {
-  return <AdminPageClient />;
+  return <AdminPageClient />; 
 }
