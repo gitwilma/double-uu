@@ -95,93 +95,28 @@ export const CardShell = styled.article<{
   }}
 
   ${media.tablet} {
-  position: relative;
-  top: auto;
-  left: auto;
-  right: auto;
-  transform: none;
-
-  width: 100%;
-  height: auto;
-}
-
-    ${media.mobile} {
-  position: relative;
-  top: auto;
-  left: auto;
-  right: auto;
-
-  transform: none;
-
-  width: 100%;
-  height: auto;
-
-  margin: 0;
-}
-`;
-
-export const TitleBlock = styled.div<{
-  $side: "left" | "right";
-  $progress: number;
-}>`
-  position: absolute;
-  z-index: 5;
-  max-width: 420px;
-
-  ${({ $side }) =>
-    $side === "left"
-      ? css`
-          left: calc(var(--edge) + var(--cardW) + var(--gap));
-          top: 18vh;
-          text-align: left;
-        `
-      : css`
-          right: calc(var(--edge) + var(--cardW) + var(--gap));
-          bottom: 16vh;
-          text-align: right;
-        `}
-
-  ${({ $progress }) => {
-    const p = Math.max(0, Math.min(1, $progress));
-    const delay = 0.25;
-    const ramp = Math.max(0, Math.min(1, (p - delay) / (1 - delay)));
-
-    return css`
-      opacity: ${ramp};
-      transition: opacity 1s linear;
-      will-change: opacity;
-    `;
-  }}
-
-  ${media.tablet} {
     position: relative;
+    top: auto;
     left: auto;
     right: auto;
-    top: auto;
-    bottom: auto;
+    transform: none;
 
-    margin-top: ${spacing.md};
-    max-width: 100%;
-    text-align: left;
-
-    opacity: 1;
-    transition: none;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
   }
 
   ${media.mobile} {
-  position: relative;
-  left: auto;
-  right: auto;
-  top: auto;
-  bottom: auto;
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    transform: none;
 
-  margin-top: ${spacing.md};
-  max-width: 100%;
-  width: 100%;
-
-  text-align: left;
-  opacity: 1;
-}
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+  }
 `;
 
 export const DateLabel = styled.time<{ $side?: "left" | "right" }>`
@@ -252,6 +187,81 @@ export const Subtitle = styled.p<{ $side?: "left" | "right" }>`
     transform: none;
     pointer-events: auto;
     text-align: left;
+  }
+`;
+
+export const TitleBlock = styled.div<{
+  $side: "left" | "right";
+  $progress: number;
+}>`
+  position: absolute;
+  z-index: 5;
+  max-width: 420px;
+  display: flex;
+  flex-direction: column;
+
+  ${({ $side }) =>
+    $side === "left"
+      ? css`
+          left: calc(var(--edge) + var(--cardW) + var(--gap));
+          top: 18vh;
+          text-align: left;
+        `
+      : css`
+          right: calc(var(--edge) + var(--cardW) + var(--gap));
+          bottom: 16vh;
+          text-align: right;
+        `}
+
+  ${({ $progress }) => {
+    const p = Math.max(0, Math.min(1, $progress));
+    const delay = 0.25;
+    const ramp = Math.max(0, Math.min(1, (p - delay) / (1 - delay)));
+
+    return css`
+      opacity: ${ramp};
+      transition: opacity 1s linear;
+      will-change: opacity;
+    `;
+  }}
+
+  ${media.tablet} {
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+
+    margin-top: ${spacing.md};
+    max-width: 100%;
+    text-align: left;
+
+    opacity: 1;
+    transition: none;
+
+    ${DateLabel} { order: 1; }
+    ${Title} { order: 2; }
+    ${Subtitle} { order: 3; }
+  }
+
+  ${media.mobile} {
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+
+    margin-top: ${spacing.md};
+    max-width: 100%;
+    width: 100%;
+
+    text-align: left;
+    opacity: 1;
+    transition: none;
+    
+    ${DateLabel} { order: 1; }
+    ${Title} { order: 2; }
+    ${Subtitle} { order: 3; }
   }
 `;
 
