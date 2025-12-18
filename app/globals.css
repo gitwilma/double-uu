@@ -19,11 +19,11 @@ font-weight: 400;
 
   /* Din gradient */
   background:
-    radial-gradient(60% 50% at 40% 20%, #f7b78d 0%, transparent 60%),
-    radial-gradient(55% 45% at 85% 15%, #f4a9c8 0%, transparent 60%),
-    radial-gradient(45% 45% at 25% 75%, #f2b3d6 0%, transparent 65%),
-    radial-gradient(40% 40% at 50% 50%, #d7c8f5 0%, transparent 70%),
-    #f4a9c8;
+    radial-gradient(70% 70% at 50% 50%, #fff950 0%, transparent 60%),
+    radial-gradient(60% 50% at 40% 20%, #efefef 0%, transparent 60%),
+    radial-gradient(45% 45% at 25% 75%, #efefef 0%, transparent 65%),
+    
+    #efefef;
 }
 
 body::before {

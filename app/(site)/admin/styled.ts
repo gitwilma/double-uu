@@ -1,5 +1,4 @@
 "use client";
-
 import styled from "styled-components";
 
 export const Page = styled.main`
@@ -71,7 +70,7 @@ export const BackButton = styled.button`
 `;
 
 export const FormCard = styled.section`
-  background: rgba(250, 240, 224, 0.78); /* beige-ish */
+  background: rgba(248, 248, 245, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.55);
   backdrop-filter: blur(10px);
   border-radius: 22px;

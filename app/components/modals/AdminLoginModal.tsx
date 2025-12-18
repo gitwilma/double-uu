@@ -4,6 +4,22 @@ import { useEffect, useRef, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
+import {
+  Overlay,
+  Dialog,
+  Header,
+  Title,
+  Intro,
+  Form,
+  Field,
+  Label,
+  Input,
+  Actions,
+  PrimaryButton,
+  SecondaryButton,
+  ErrorText,
+} from "./AdminLoginModal.styled";
+
 type AdminLoginModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -26,14 +42,14 @@ export function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProps) {
     lastActiveElRef.current = document.activeElement as HTMLElement | null;
 
     requestAnimationFrame(() => {
-      const root = dialogRef.current;
-      if (!root) return;
-      const first = root.querySelector<HTMLElement>(
-        'input, button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+      const first = dialogRef.current?.querySelector<HTMLElement>(
+        'input, button:not([disabled]), [tabindex]:not([tabindex="-1"])'
       );
       first?.focus();
     });
   }, [isOpen]);
+
+  if (!isOpen) return null;
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -67,7 +83,6 @@ export function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProps) {
     setPassword("");
     setErrorMessage(null);
     onClose();
-
     requestAnimationFrame(() => lastActiveElRef.current?.focus());
   }
 
@@ -75,106 +90,62 @@ export function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProps) {
     if (e.key === "Escape") {
       e.stopPropagation();
       handleClose();
-      return;
-    }
-
-    if (e.key !== "Tab") return;
-
-    const root = dialogRef.current;
-    if (!root) return;
-
-    const focusables = root.querySelectorAll<HTMLElement>(
-      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
-    );
-    if (focusables.length === 0) return;
-
-    const first = focusables[0];
-    const last = focusables[focusables.length - 1];
-
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault();
-      last.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault();
-      first.focus();
     }
   }
 
-  if (!isOpen) return null;
-
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60"
-      onClick={handleClose}
-    >
-      <div
+    <Overlay onClick={handleClose}>
+      <Dialog
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-label="Admin login"
         tabIndex={-1}
-        className="w-full max-w-sm rounded-2xl bg-[#23062E] p-6 text-white shadow-xl"
         onClick={(e) => e.stopPropagation()}
         onKeyDown={onDialogKeyDown}
       >
-        <header className="mb-4">
-          <h2 className="text-lg font-semibold">Admin login</h2>
-          <p className="mt-1 text-xs text-neutral-200">
-            Endast administratören av magasinet kan logga in här.
-          </p>
-        </header>
+        <Header>
+          <Title>Admin login</Title>
+          <Intro>Endast administratören av magasinet kan logga in här.</Intro>
+        </Header>
 
-        <form onSubmit={handleSubmit} className="space-y-3">
-          <div>
-            <label className="mb-1 block text-xs uppercase tracking-wide text-neutral-300">
-              E-post
-            </label>
-            <input
+        <Form onSubmit={handleSubmit}>
+          <Field>
+            <Label>E-post</Label>
+            <Input
               type="email"
               value={email}
               autoComplete="email"
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-md border border-white/20 bg-black/20 px-3 py-2 text-sm outline-none placeholder:text-neutral-400 focus:border-white/60"
               placeholder="admin@mail.com"
               required
             />
-          </div>
+          </Field>
 
-          <div>
-            <label className="mb-1 block text-xs uppercase tracking-wide text-neutral-300">
-              Lösenord
-            </label>
-            <input
+          <Field>
+            <Label>Lösenord</Label>
+            <Input
               type="password"
               value={password}
               autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-md border border-white/20 bg-black/20 px-3 py-2 text-sm outline-none placeholder:text-neutral-400 focus:border-white/60"
               placeholder="••••••••"
               required
             />
-          </div>
+          </Field>
 
-          {errorMessage && <p className="text-xs text-red-400">{errorMessage}</p>}
+          {errorMessage && <ErrorText>{errorMessage}</ErrorText>}
 
-          <div className="mt-3 flex gap-2">
-            <button
-              type="submit"
-              disabled={loading}
-              className="flex-1 rounded-md bg-white px-4 py-2 text-sm font-medium text-black disabled:cursor-not-allowed disabled:opacity-60"
-            >
+          <Actions>
+            <PrimaryButton type="submit" disabled={loading}>
               {loading ? "Loggar in…" : "Logga in"}
-            </button>
-            <button
-              type="button"
-              onClick={handleClose}
-              className="rounded-md border border-white/40 px-4 py-2 text-sm"
-            >
+            </PrimaryButton>
+            <SecondaryButton type="button" onClick={handleClose}>
               Avbryt
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+            </SecondaryButton>
+          </Actions>
+        </Form>
+      </Dialog>
+    </Overlay>
   );
 }

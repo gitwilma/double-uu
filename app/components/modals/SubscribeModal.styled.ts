@@ -17,7 +17,7 @@ export const Overlay = styled.div`
 
 export const Dialog = styled.div`
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   padding: ${spacing.lg};
   border-radius: 24px;
 
@@ -38,7 +38,7 @@ export const Title = styled.h2`
   margin: 0;
   font-family: ${typography.title.family};
   font-weight: ${typography.title.weight};
-  font-size: 22px;
+  font-size: 24px;
   letter-spacing: ${typography.title.tracking};
   color: #111;
 `;
@@ -46,8 +46,8 @@ export const Title = styled.h2`
 export const Intro = styled.p`
   margin-top: ${spacing.xs};
   font-family: ${typography.body.family};
-  font-size: 13px;
-  color: rgba(0, 0, 0, 0.7);
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.75);
 `;
 
 export const Form = styled.form`
@@ -76,13 +76,27 @@ export const Input = styled.input`
 
   padding: 10px 12px;
   border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.25);
-  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.6);
 
   &:focus-visible {
     outline: 2px solid #000;
     outline-offset: 2px;
   }
+`;
+
+export const Consent = styled.label`
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+
+  font-family: ${typography.body.family};
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.8);
+`;
+
+export const Checkbox = styled.input`
+  margin-top: 2px;
 `;
 
 export const Actions = styled.div`
@@ -104,7 +118,7 @@ export const PrimaryButton = styled.button`
   color: #fff;
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
   }
 `;
@@ -112,7 +126,6 @@ export const PrimaryButton = styled.button`
 export const SecondaryButton = styled.button`
   padding: 10px 14px;
   border-radius: 12px;
-
   background: transparent;
   border: 1px solid rgba(0, 0, 0, 0.35);
   font-family: ${typography.body.family};
@@ -121,4 +134,9 @@ export const SecondaryButton = styled.button`
 export const ErrorText = styled.p`
   font-size: 12px;
   color: #b00020;
+`;
+
+export const SuccessText = styled.p`
+  font-size: 12px;
+  color: #067d68;
 `;
