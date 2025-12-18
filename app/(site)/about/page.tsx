@@ -1,12 +1,12 @@
-import { ContentPage } from "@/app/components/content/ContentPage";
 import { getAboutContent } from "@/lib/repositories/aboutRepo.mongo";
+import { AboutContent } from "./AboutContent";
 
 export default async function AboutPage() {
   const about = await getAboutContent();
 
   if (!about) {
     return (
-      <ContentPage
+      <AboutContent
         title="About"
         sections={[
           {
@@ -20,7 +20,7 @@ export default async function AboutPage() {
   }
 
   return (
-    <ContentPage
+    <AboutContent
       title={about.title}
       coverImage={about.coverImage}
       sections={about.sections}

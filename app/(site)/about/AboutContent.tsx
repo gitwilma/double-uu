@@ -13,7 +13,7 @@ import {
   Section,
   SectionImage,
   SectionText,
-} from "./ContentPage.styled";
+} from "./AboutContent.styled";
 
 type Props = {
   title: string;
@@ -22,7 +22,7 @@ type Props = {
   sections: ArticleSection[];
 };
 
-export function ContentPage({ title, publishedAt, coverImage, sections }: Props) {
+export function AboutContent({ title, publishedAt, coverImage, sections }: Props) {
   return (
     <Page>
       <Inner>
@@ -42,9 +42,7 @@ export function ContentPage({ title, publishedAt, coverImage, sections }: Props)
           <Head>
             <Title>{title}</Title>
             {publishedAt && (
-              <MetaRow>
-                {new Date(publishedAt).toLocaleDateString("sv-SE")}
-              </MetaRow>
+              <MetaRow>{new Date(publishedAt).toLocaleDateString("sv-SE")}</MetaRow>
             )}
           </Head>
         </Hero>
