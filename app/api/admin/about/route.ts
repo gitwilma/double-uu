@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getAboutContent, upsertAboutContent } from "@/lib/repositories/aboutRepo.mongo";
+import { revalidatePath } from "next/cache";
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
@@ -42,5 +43,8 @@ export async function POST(req: Request) {
   }
 
   const saved = await upsertAboutContent({ title, coverImage, sections });
+
+revalidatePath("/about");
+
   return NextResponse.json(saved);
 }
