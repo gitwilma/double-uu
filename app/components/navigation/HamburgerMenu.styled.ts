@@ -121,6 +121,8 @@ export const Drawer = styled.aside<{ $open: boolean }>`
 
   box-shadow: 24px 0 80px rgba(0, 0, 0, 0.25);
   z-index: 66;
+  pointer-events: ${({ $open }) => ($open ? "auto" : "none")};
+  visibility: ${({ $open }) => ($open ? "visible" : "hidden")};
 `;
 
 export const Nav = styled.nav`
@@ -157,7 +159,6 @@ export const MidBlock = styled.div`
   gap: ${spacing.sm};
 `;
 
-
 export const MidTitle = styled.div`
   font-weight: 800;
   color: #111;
@@ -191,20 +192,6 @@ export const SmallLinks = styled.div`
   gap: 10px 12px;
 `;
 
-export const ActionLink = styled(Link)`
-  font-size: 12px;
-  color: rgba(0, 0, 0, 0.75);
-  text-decoration: none;
-  background: transparent;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-
-  &:hover {
-    color: rgba(0, 0, 0, 1);
-  }
-`;
-
 export const ActionButton = styled.button`
   font-size: 12px;
   color: rgba(0, 0, 0, 0.75);
@@ -217,8 +204,13 @@ export const ActionButton = styled.button`
   &:hover {
     color: rgba(0, 0, 0, 1);
   }
-`;
 
+  &:focus-visible {
+    outline: 3px solid rgba(0, 0, 0, 0.8);
+    outline-offset: 4px;
+    border-radius: 10px;
+  }
+`;
 
 export const FooterCopy = styled.div`
   margin-top: 12px;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type SubscribeModalProps = {
   isOpen: boolean;
@@ -14,7 +14,23 @@ export function SubscribeModal({ isOpen, onClose }: SubscribeModalProps) {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  if (!isOpen) return null;
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const lastActiveElRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    lastActiveElRef.current = document.activeElement as HTMLElement | null;
+
+    requestAnimationFrame(() => {
+      const root = dialogRef.current;
+      if (!root) return;
+      const first = root.querySelector<HTMLElement>(
+        'input, button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+      );
+      first?.focus();
+    });
+  }, [isOpen]);
 
   const canSubmit = email.trim().length > 0 && consent && !loading;
 
@@ -45,11 +61,7 @@ export function SubscribeModal({ isOpen, onClose }: SubscribeModalProps) {
       setEmail("");
       setConsent(false);
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setErrorMessage(err.message);
-      } else {
-        setErrorMessage("Kunde inte skicka din prenumeration.");
-      }
+      setErrorMessage(err instanceof Error ? err.message : "Kunde inte skicka din prenumeration.");
     } finally {
       setLoading(false);
     }
@@ -61,7 +73,40 @@ export function SubscribeModal({ isOpen, onClose }: SubscribeModalProps) {
     setSuccessMessage(null);
     setErrorMessage(null);
     onClose();
+
+    requestAnimationFrame(() => lastActiveElRef.current?.focus());
   }
+
+  function onDialogKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Escape") {
+      e.stopPropagation();
+      handleClose();
+      return;
+    }
+
+    if (e.key !== "Tab") return;
+
+    const root = dialogRef.current;
+    if (!root) return;
+
+    const focusables = root.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusables.length === 0) return;
+
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
+  if (!isOpen) return null;
 
   return (
     <div
@@ -69,8 +114,14 @@ export function SubscribeModal({ isOpen, onClose }: SubscribeModalProps) {
       onClick={handleClose}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Prenumerera på magasinet"
+        tabIndex={-1}
         className="w-full max-w-md rounded-2xl bg-[#23062E] p-6 text-white shadow-xl"
         onClick={(e) => e.stopPropagation()}
+        onKeyDown={onDialogKeyDown}
       >
         <header className="mb-4">
           <h2 className="text-xl font-semibold">Prenumerera på magasinet</h2>
@@ -104,12 +155,8 @@ export function SubscribeModal({ isOpen, onClose }: SubscribeModalProps) {
             <span>Ja, jag vill prenumerera på magasinet.</span>
           </label>
 
-          {errorMessage && (
-            <p className="text-xs text-red-400">{errorMessage}</p>
-          )}
-          {successMessage && (
-            <p className="text-xs text-emerald-400">{successMessage}</p>
-          )}
+          {errorMessage && <p className="text-xs text-red-400">{errorMessage}</p>}
+          {successMessage && <p className="text-xs text-emerald-400">{successMessage}</p>}
 
           <div className="mt-2 flex gap-2">
             <button

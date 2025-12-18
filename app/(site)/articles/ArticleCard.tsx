@@ -40,17 +40,25 @@ export function ArticleCard({ article, side, progress }: Props) {
         {side === "left" ? (
           <>
             {date && (
-              <DateLabel $side={side} dateTime={article.publishedAt!}>{date}</DateLabel>
+              <DateLabel $side={side} dateTime={article.publishedAt!}>
+                {date}
+              </DateLabel>
             )}
             <Title>{article.title}</Title>
-            {article.excerpt ? <Subtitle $side={side}>{article.excerpt}</Subtitle> : null}
+            {article.excerpt ? (
+              <Subtitle $side={side}>{article.excerpt}</Subtitle>
+            ) : null}
           </>
         ) : (
           <>
-            {article.excerpt ? <Subtitle $side={side}>{article.excerpt}</Subtitle> : null}
+            {article.excerpt ? (
+              <Subtitle $side={side}>{article.excerpt}</Subtitle>
+            ) : null}
             <Title>{article.title}</Title>
             {date && (
-              <DateLabel $side={side} dateTime={article.publishedAt!}>{date}</DateLabel>
+              <DateLabel $side={side} dateTime={article.publishedAt!}>
+                {date}
+              </DateLabel>
             )}
           </>
         )}

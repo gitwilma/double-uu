@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSession, signOut } from "next-auth/react";
 
 import { AdminLoginModal } from "@/app/components/modals/AdminLoginModal";
@@ -52,7 +52,6 @@ export function HamburgerMenu({
   ],
   midTitle = "Redaktör och utvecklare",
   midText = "lorem ipsum lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum.",
-
   avatarSrc = "/profile-pic.png",
   linkedinUrl = "https://www.linkedin.com/in/wilma-håkansson-7374a3234",
   githubUrl = "https://github.com/gitwilma/double-uu",
@@ -66,6 +65,9 @@ export function HamburgerMenu({
   const isLoggedIn = !!session?.user?.email;
 
   const year = new Date().getFullYear();
+
+  const burgerBtnRef = useRef<HTMLButtonElement | null>(null);
+  const drawerRef = useRef<HTMLElement | null>(null);
 
   const closeMenu = () => setOpen(false);
 
@@ -86,6 +88,25 @@ export function HamburgerMenu({
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) return;
+
+    const el = drawerRef.current;
+    if (!el) return;
+
+    requestAnimationFrame(() => {
+      const first = el.querySelector<HTMLElement>(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      first?.focus();
+    });
+  }, [open]);
+
+  useEffect(() => {
+    if (open) return;
+    requestAnimationFrame(() => burgerBtnRef.current?.focus());
+  }, [open]);
+
   return (
     <>
       <Root>
@@ -103,9 +124,11 @@ export function HamburgerMenu({
           </LogoWrap>
 
           <BurgerButton
+            ref={burgerBtnRef}
             type="button"
             aria-label={open ? "Close menu" : "Open menu"}
             aria-expanded={open}
+            aria-controls="hamburger-drawer"
             onClick={() => setOpen((v) => !v)}
           >
             <BurgerLines $open={open}>
@@ -116,7 +139,19 @@ export function HamburgerMenu({
 
         <Backdrop $open={open} onClick={closeMenu} />
 
-        <Drawer $open={open} role="dialog" aria-modal="true" aria-label="Menu">
+        <Drawer
+          id="hamburger-drawer"
+          ref={(node) => {
+            drawerRef.current = node;
+          }}
+          $open={open}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menu"
+          aria-hidden={!open}
+          {...(!open ? ({ inert: true } as any) : {})}
+        >
+
           <Nav aria-label="Primary">
             {navItems.map((item) => (
               <NavLink key={item.href} href={item.href} onClick={closeMenu}>
@@ -128,6 +163,7 @@ export function HamburgerMenu({
           <MidBlock>
             <MidTitle>{midTitle}</MidTitle>
             <MidText>{midText}</MidText>
+
             <MidProfile>
               <MidAvatar aria-hidden>
                 <Image
@@ -140,20 +176,23 @@ export function HamburgerMenu({
                 />
               </MidAvatar>
 
-            <MidAddress>
-              <MidName>Wilma Håkansson</MidName>
-              <MidLinks aria-label="External links">
-                <MidExternalLink href={linkedinUrl} target="_blank" rel="noreferrer">
-                  LinkedIn
-                </MidExternalLink>
-                <MidExternalLink href={githubUrl} target="_blank" rel="noreferrer">
-                  GitHub
-                </MidExternalLink>
-              </MidLinks>
-            </MidAddress>
-          </MidProfile>
-          
-        </MidBlock>
+              <MidAddress>
+                <MidName>Wilma Håkansson</MidName>
+                <MidLinks aria-label="External links">
+                  <MidExternalLink
+                    href={linkedinUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    LinkedIn
+                  </MidExternalLink>
+                  <MidExternalLink href={githubUrl} target="_blank" rel="noreferrer">
+                    GitHub
+                  </MidExternalLink>
+                </MidLinks>
+              </MidAddress>
+            </MidProfile>
+          </MidBlock>
 
           <Bottom>
             <BottomTitle>Footer</BottomTitle>

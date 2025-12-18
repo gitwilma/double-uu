@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
@@ -17,7 +17,23 @@ export function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProps) {
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  if (!isOpen) return null;
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const lastActiveElRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    lastActiveElRef.current = document.activeElement as HTMLElement | null;
+
+    requestAnimationFrame(() => {
+      const root = dialogRef.current;
+      if (!root) return;
+      const first = root.querySelector<HTMLElement>(
+        'input, button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'
+      );
+      first?.focus();
+    });
+  }, [isOpen]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -51,7 +67,40 @@ export function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProps) {
     setPassword("");
     setErrorMessage(null);
     onClose();
+
+    requestAnimationFrame(() => lastActiveElRef.current?.focus());
   }
+
+  function onDialogKeyDown(e: React.KeyboardEvent) {
+    if (e.key === "Escape") {
+      e.stopPropagation();
+      handleClose();
+      return;
+    }
+
+    if (e.key !== "Tab") return;
+
+    const root = dialogRef.current;
+    if (!root) return;
+
+    const focusables = root.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusables.length === 0) return;
+
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+
+  if (!isOpen) return null;
 
   return (
     <div
@@ -59,8 +108,14 @@ export function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProps) {
       onClick={handleClose}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Admin login"
+        tabIndex={-1}
         className="w-full max-w-sm rounded-2xl bg-[#23062E] p-6 text-white shadow-xl"
         onClick={(e) => e.stopPropagation()}
+        onKeyDown={onDialogKeyDown}
       >
         <header className="mb-4">
           <h2 className="text-lg font-semibold">Admin login</h2>
@@ -100,9 +155,7 @@ export function AdminLoginModal({ isOpen, onClose }: AdminLoginModalProps) {
             />
           </div>
 
-          {errorMessage && (
-            <p className="text-xs text-red-400">{errorMessage}</p>
-          )}
+          {errorMessage && <p className="text-xs text-red-400">{errorMessage}</p>}
 
           <div className="mt-3 flex gap-2">
             <button

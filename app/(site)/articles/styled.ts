@@ -23,7 +23,7 @@ export const Viewport = styled.section`
     padding: ${spacing.xl} 0;
   }
 
- ${media.mobile} {
+  ${media.mobile} {
     height: auto;
     padding: ${spacing.xl} 0;
   }
@@ -79,8 +79,12 @@ export const CardShell = styled.article<{
 
   ${({ $side }) =>
     $side === "left"
-      ? css`left: var(--edge);`
-      : css`right: var(--edge);`}
+      ? css`
+          left: var(--edge);
+        `
+      : css`
+          right: var(--edge);
+        `}
 
   ${({ $side, $progress }) => {
     const p = Math.max(0, Math.min(1, $progress));
@@ -129,7 +133,7 @@ export const DateLabel = styled.time<{ $side?: "left" | "right" }>`
   text-transform: uppercase;
   color: rgba(0, 0, 0, 0.55);
 
-   ${({ $side }) =>
+  ${({ $side }) =>
     $side === "right" &&
     css`
       text-align: right;
@@ -161,7 +165,7 @@ export const Subtitle = styled.p<{ $side?: "left" | "right" }>`
   line-height: ${typography.body.lineHeight};
   color: rgba(0, 0, 0, 0.85);
 
-   ${({ $side }) =>
+  ${({ $side }) =>
     $side === "right" &&
     css`
       text-align: right;
@@ -171,9 +175,7 @@ export const Subtitle = styled.p<{ $side?: "left" | "right" }>`
   transform: translateY(6px);
   pointer-events: none;
 
-  transition:
-    opacity 0.25s ease,
-    transform 0.25s ease;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 
   ${media.tablet} {
     opacity: 1;
@@ -239,9 +241,15 @@ export const TitleBlock = styled.div<{
     opacity: 1;
     transition: none;
 
-    ${DateLabel} { order: 1; }
-    ${Title} { order: 2; }
-    ${Subtitle} { order: 3; }
+    ${DateLabel} {
+      order: 1;
+    }
+    ${Title} {
+      order: 2;
+    }
+    ${Subtitle} {
+      order: 3;
+    }
   }
 
   ${media.mobile} {
@@ -258,10 +266,16 @@ export const TitleBlock = styled.div<{
     text-align: left;
     opacity: 1;
     transition: none;
-    
-    ${DateLabel} { order: 1; }
-    ${Title} { order: 2; }
-    ${Subtitle} { order: 3; }
+
+    ${DateLabel} {
+      order: 1;
+    }
+    ${Title} {
+      order: 2;
+    }
+    ${Subtitle} {
+      order: 3;
+    }
   }
 `;
 
@@ -275,23 +289,33 @@ export const CardLink = styled(Link)`
     pointer-events: auto;
   }
 
- ${media.tablet} {
-  ${({ href }) =>
-    typeof href === "string" &&
-    css`
-      &:nth-of-type(even) {
-        direction: rtl;
+  &:focus-visible ${CardShell} {
+    outline: 3px solid rgba(0, 0, 0, 0.85);
+    outline-offset: 6px;
+    border-radius: 18px;
+  }
 
-        > * {
-          direction: ltr;
+  &:focus-visible ${TitleBlock} {
+    outline: 3px solid rgba(0, 0, 0, 0.85);
+    outline-offset: 6px;
+    border-radius: 14px;
+  }
+
+  ${media.tablet} {
+    ${({ href }) =>
+      typeof href === "string" &&
+      css`
+        &:nth-of-type(even) {
+          direction: rtl;
+
+          > * {
+            direction: ltr;
+          }
         }
-      }
-    `}
-}
+      `}
+  }
 
-   ${media.mobile} {
+  ${media.mobile} {
     display: block;
   }
 `;
-
-
