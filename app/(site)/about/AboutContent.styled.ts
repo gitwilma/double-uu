@@ -1,6 +1,9 @@
 "use client";
 
 import styled, { css } from "styled-components";
+import { media } from "@/lib/styles/media";
+import { spacing } from "@/lib/styles/spacing";
+import { typography } from "@/lib/styles/typography";
 
 export const Page = styled.main`
   position: relative;
@@ -13,18 +16,36 @@ export const Inner = styled.div`
   z-index: 2;
   max-width: 1080px;
   margin: 0 auto;
-  padding: 110px 20px 80px;
+
+  padding: 110px ${spacing.md} 80px;
+
+  ${media.tablet} {
+    padding: 96px ${spacing.md} 72px;
+  }
+
+  ${media.mobile} {
+    padding: 80px ${spacing.md} 64px;
+  }
+
+  ${media.wide} {
+    max-width: 1200px;
+  }
 `;
 
 export const Hero = styled.header`
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 22px;
+  grid-template-columns: 520px 1fr;
+  gap: ${spacing.xl};
   align-items: start;
 
-  @media (min-width: 900px) {
-    grid-template-columns: 520px 1fr;
-    gap: 40px;
+  ${media.tablet} {
+    grid-template-columns: minmax(320px, 460px) 1fr;
+    gap: ${spacing.lg};
+  }
+
+  ${media.mobile} {
+    grid-template-columns: 1fr;
+    gap: ${spacing.md};
   }
 `;
 
@@ -40,6 +61,15 @@ export const Cover = styled.figure`
   border: 1px solid rgba(255, 255, 255, 0.18);
 
   position: relative;
+
+  ${media.tablet} {
+    max-width: none;
+  }
+
+  ${media.mobile} {
+    max-width: none;
+    width: 100%;
+  }
 `;
 
 export const Head = styled.div`
@@ -48,42 +78,64 @@ export const Head = styled.div`
 `;
 
 export const Title = styled.h1`
-  font-family: var(--font-title);
-  font-weight: 400;
   margin: 0;
-  letter-spacing: -0.03em;
+
+  font-family: ${typography.title.family};
+  font-weight: ${typography.title.weight};
+  letter-spacing: ${typography.title.tracking};
   line-height: 0.95;
+
   font-size: clamp(44px, 6.5vw, 82px);
+
+  ${media.tablet} {
+    font-size: clamp(38px, 5vw, 64px);
+  }
+
+  ${media.mobile} {
+    font-size: clamp(34px, 9vw, 48px);
+    letter-spacing: -0.02em;
+  }
 `;
 
 export const MetaRow = styled.p`
-  margin: 12px 0 0;
-  font-size: 12px;
-  color: rgba(0, 0, 0, 0.72);
+  margin-top: ${spacing.sm};
+
+  font-family: ${typography.body.family};
+  font-size: ${typography.meta.size};
+  letter-spacing: ${typography.meta.tracking};
+  text-transform: uppercase;
+  color: rgba(0, 0, 0, 0.7);
 `;
 
 export const Body = styled.article`
-  margin-top: 38px;
+  margin-top: ${spacing.xl};
+
+  ${media.mobile} {
+    margin-top: ${spacing.lg};
+  }
 `;
 
 export const Section = styled.section<{ $flip: boolean }>`
   display: grid;
-  gap: 28px;
-  margin: 120px 0;
+  gap: ${spacing.lg};
+  margin: ${spacing.xxl} 0;
 
-  @media (min-width: 900px) {
-    grid-template-columns: 1fr 1fr;
-    align-items: start;
+  grid-template-columns: 1fr 1fr;
+  align-items: start;
 
-    ${({ $flip }) =>
-      $flip &&
-      css`
-        direction: rtl;
+  ${({ $flip }) =>
+    $flip &&
+    css`
+      direction: rtl;
 
-        & > * {
-          direction: ltr;
-        }
-      `}
+      & > * {
+        direction: ltr;
+      }
+    `}
+
+  ${media.mobile} {
+    grid-template-columns: 1fr;
+    margin: ${spacing.xl} 0;
   }
 `;
 
@@ -100,18 +152,49 @@ export const SectionImage = styled.figure`
 `;
 
 export const SectionText = styled.div`
-  max-width: 46ch;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: auto;
+
+  padding: ${spacing.lg};
+  border-radius: 24px;
+
+  position: relative;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  scrollbar-gutter: stable both-edges;
+
+  ${media.tablet} {
+    padding: ${spacing.md};
+  }
+
+  ${media.mobile} {
+    aspect-ratio: auto;
+    overflow: visible;
+    padding: 0;
+    background: transparent;
+    border: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 
   h2 {
-    margin: 0 0 12px;
-    font-size: 28px;
-    font-weight: 700;
+    margin: 0 0 ${spacing.sm};
+
+    font-family: ${typography.title.family};
+    font-weight: ${typography.title.weight};
     letter-spacing: -0.02em;
+    font-size: 28px;
+    line-height: 1.1;
   }
 
   p {
     margin: 0;
+    font-family: ${typography.body.family};
     font-size: 17px;
-    line-height: 1.6;
+    line-height: ${typography.body.lineHeight};
   }
 `;

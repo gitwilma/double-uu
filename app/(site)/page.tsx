@@ -22,12 +22,7 @@ export default function HomePage() {
                 About
               </NavLink>
             </NavItem>
-
-            <NavItem>
-              <NavLink as={Link} href="/creator">
-                Creator
-              </NavLink>
-            </NavItem>
+            
           </NavList>
         </CenterNav>
       </Main>

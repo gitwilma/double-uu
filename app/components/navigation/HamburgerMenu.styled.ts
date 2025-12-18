@@ -1,5 +1,7 @@
 import styled, { css } from "styled-components";
 import Link from "next/link";
+import { spacing } from "@/lib/styles/spacing";
+import { typography } from "@/lib/styles/typography";
 
 export const Root = styled.div`
   position: relative;
@@ -28,10 +30,15 @@ export const BurgerButton = styled.button`
   appearance: none;
   border: none;
   cursor: pointer;
-  padding: 10px 10px;
+
+  width: 48px;
+  height: 48px;
+  padding: 0;
   border-radius: 14px;
 
-  background: rgba(236, 233, 227, 0.75);
+  display: grid;
+  place-items: center;
+
   border: 1px solid rgba(0, 0, 0, 0.12);
   backdrop-filter: blur(6px);
 
@@ -107,7 +114,7 @@ export const Drawer = styled.aside<{ $open: boolean }>`
 
   display: flex;
   flex-direction: column;
-  padding: 22px 22px 26px;
+  padding: ${spacing.lg} ${spacing.lg} ${spacing.lg};
 
   transform: translate3d(${({ $open }) => ($open ? "0" : "-105%")}, 0, 0);
   transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -120,7 +127,7 @@ export const Nav = styled.nav`
   margin-top: 120px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: ${spacing.sm};
 `;
 
 export const NavLink = styled(Link)`
@@ -134,23 +141,33 @@ export const NavLink = styled(Link)`
   &:hover {
     opacity: 0.75;
   }
+
+  &:focus-visible {
+    outline: 3px solid rgba(0, 0, 0, 0.8);
+    outline-offset: 4px;
+    border-radius: 10px;
+  }
 `;
 
 export const MidBlock = styled.div`
   margin-top: auto;
-  margin-bottom: 38px;
+  margin-bottom: ${spacing.lg};
   max-width: 300px;
+  display: grid;
+  gap: ${spacing.sm};
 `;
 
+
 export const MidTitle = styled.div`
-  font-weight: 700;
+  font-weight: 800;
   color: #111;
-  margin-bottom: 6px;
   font-size: 14px;
+  letter-spacing: 0.02em;
 `;
 
 export const MidText = styled.p`
   margin: 0;
+  font-family: ${typography.body.family};
   color: rgba(0, 0, 0, 0.85);
   font-size: 13px;
   line-height: 1.35;
@@ -205,6 +222,66 @@ export const ActionButton = styled.button`
 
 export const FooterCopy = styled.div`
   margin-top: 12px;
+  margin-bottom: 28px;
   font-size: 12px;
   color: rgba(0, 0, 0, 0.65);
+`;
+
+export const MidAvatar = styled.div`
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  overflow: hidden;
+
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+
+  img {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+`;
+
+export const MidLinks = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${spacing.md};
+`;
+
+export const MidExternalLink = styled.a`
+  font-size: 12px;
+  font-family: ${typography.body.family};
+  color: rgba(0, 0, 0, 0.75);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  &:hover {
+    color: rgba(0, 0, 0, 1);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(0, 0, 0, 0.8);
+    outline-offset: 3px;
+    border-radius: 8px;
+  }
+`;
+
+export const MidProfile = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${spacing.md};
+`;
+
+export const MidAddress = styled.address`
+  display: flex;
+  flex-direction: column;
+  font-style: normal;
+`;
+
+export const MidName = styled.div`
+  font-weight: 800;
+  font-size: 13px;
+  color: #111;
+  margin-bottom: 4px;
 `;

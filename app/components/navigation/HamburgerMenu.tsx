@@ -19,6 +19,9 @@ import {
   Nav,
   NavLink,
   MidBlock,
+  MidAvatar,
+  MidLinks,
+  MidExternalLink,
   MidTitle,
   MidText,
   Bottom,
@@ -26,6 +29,9 @@ import {
   SmallLinks,
   ActionButton,
   FooterCopy,
+  MidProfile,
+  MidAddress,
+  MidName,
 } from "./HamburgerMenu.styled";
 
 type NavItem = { label: string; href: string };
@@ -34,16 +40,22 @@ type Props = {
   navItems?: NavItem[];
   midTitle?: string;
   midText?: string;
+  avatarSrc?: string;
+  linkedinUrl?: string;
+  githubUrl?: string;
 };
 
 export function HamburgerMenu({
   navItems = [
     { label: "MAGAZINE", href: "/articles" },
     { label: "ABOUT", href: "/about" },
-    { label: "CREATOR", href: "/creator" },
   ],
-  midTitle = "Rubrik",
+  midTitle = "Redaktör och utvecklare",
   midText = "lorem ipsum lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum.",
+
+  avatarSrc = "/profile-pic.png",
+  linkedinUrl = "https://www.linkedin.com/in/wilma-håkansson-7374a3234",
+  githubUrl = "https://github.com/gitwilma/double-uu",
 }: Props) {
   const [open, setOpen] = useState(false);
 
@@ -116,7 +128,32 @@ export function HamburgerMenu({
           <MidBlock>
             <MidTitle>{midTitle}</MidTitle>
             <MidText>{midText}</MidText>
-          </MidBlock>
+            <MidProfile>
+              <MidAvatar aria-hidden>
+                <Image
+                  src={avatarSrc}
+                  alt=""
+                  width={50}
+                  height={50}
+                  style={{ objectFit: "cover" }}
+                  priority={false}
+                />
+              </MidAvatar>
+
+            <MidAddress>
+              <MidName>Wilma Håkansson</MidName>
+              <MidLinks aria-label="External links">
+                <MidExternalLink href={linkedinUrl} target="_blank" rel="noreferrer">
+                  LinkedIn
+                </MidExternalLink>
+                <MidExternalLink href={githubUrl} target="_blank" rel="noreferrer">
+                  GitHub
+                </MidExternalLink>
+              </MidLinks>
+            </MidAddress>
+          </MidProfile>
+          
+        </MidBlock>
 
           <Bottom>
             <BottomTitle>Footer</BottomTitle>
@@ -163,7 +200,7 @@ export function HamburgerMenu({
           </Bottom>
         </Drawer>
       </Root>
-      
+
       <AdminLoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
       <SubscribeModal isOpen={isSubscribeOpen} onClose={() => setIsSubscribeOpen(false)} />
     </>
