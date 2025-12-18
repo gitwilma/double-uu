@@ -5,7 +5,6 @@ import {
   Page,
   Inner,
   Hero,
-  Cover,
   Head,
   Title,
   MetaRow,
@@ -18,27 +17,14 @@ import {
 type Props = {
   title: string;
   publishedAt?: string;
-  coverImage?: string;
   sections: ArticleSection[];
 };
 
-export function AboutContent({ title, publishedAt, coverImage, sections }: Props) {
+export function AboutContent({ title, publishedAt, sections }: Props) {
   return (
     <Page>
       <Inner>
         <Hero>
-          {coverImage && (
-            <Cover>
-              <ImageImport
-                src={coverImage}
-                alt={title}
-                fill
-                className="absolute inset-0 object-cover"
-                priority
-              />
-            </Cover>
-          )}
-
           <Head>
             <Title>{title}</Title>
             {publishedAt && (

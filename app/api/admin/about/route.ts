@@ -27,7 +27,7 @@ export async function POST(req: Request) {
   }
 
   const body = await req.json();
-  const { title, coverImage, sections } = body;
+  const { title, sections } = body;
 
   if (!title || !Array.isArray(sections) || sections.length < 1 || sections.length > 3) {
     return NextResponse.json({ error: "Invalid data" }, { status: 400 });
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
     }
   }
 
-  const saved = await upsertAboutContent({ title, coverImage, sections });
+  const saved = await upsertAboutContent({ title, sections });
 
 revalidatePath("/about");
 

@@ -49,29 +49,6 @@ export const Hero = styled.header`
   }
 `;
 
-export const Cover = styled.figure`
-  margin: 0;
-  width: 100%;
-  max-width: 520px;
-  aspect-ratio: 3 / 4;
-  border-radius: 24px;
-  overflow: hidden;
-
-  box-shadow: 0 32px 70px -26px rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-
-  position: relative;
-
-  ${media.tablet} {
-    max-width: none;
-  }
-
-  ${media.mobile} {
-    max-width: none;
-    width: 100%;
-  }
-`;
-
 export const Head = styled.div`
   color: #111;
   align-self: start;
@@ -107,14 +84,6 @@ export const MetaRow = styled.p`
   color: rgba(0, 0, 0, 0.7);
 `;
 
-export const Body = styled.article`
-  margin-top: ${spacing.xl};
-
-  ${media.mobile} {
-    margin-top: ${spacing.lg};
-  }
-`;
-
 export const Section = styled.section<{ $flip: boolean }>`
   display: grid;
   gap: ${spacing.lg};
@@ -136,6 +105,18 @@ export const Section = styled.section<{ $flip: boolean }>`
   ${media.mobile} {
     grid-template-columns: 1fr;
     margin: ${spacing.xl} 0;
+  }
+`;
+
+export const Body = styled.article`
+  margin-top: ${spacing.xl};
+
+    & > ${Section}:first-child {
+    margin-top: 0;
+  }
+
+  ${media.mobile} {
+    margin-top: ${spacing.lg};
   }
 `;
 

@@ -22,7 +22,6 @@ export default async function AboutPage() {
   return (
     <AboutContent
       title={about.title}
-      coverImage={about.coverImage}
       sections={about.sections}
     />
   );

@@ -3,7 +3,6 @@ import type { ArticleSection } from "@/lib/types";
 
 export type AboutContent = {
   title: string;
-  coverImage?: string;
   sections: ArticleSection[];
 };
 
