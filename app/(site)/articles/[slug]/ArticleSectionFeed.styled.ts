@@ -66,12 +66,13 @@ export const CardShell = styled.article<{
   top: 12vh;
   z-index: 2;
 
-  width: var(--cardW);
-  height: var(--cardH);
-
+  width: 100%;
+  max-width: 520px;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
-  border-radius: 24px;
-  box-shadow: 0 60px 40px -18px rgba(0, 0, 0, 0.45);
+
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 32px 70px -26px rgba(0, 0, 0, 0.55);
 
   ${({ $side }) =>
     $side === "left" ? css`left: var(--edge);` : css`right: var(--edge);`}
@@ -97,14 +98,16 @@ export const CardShell = styled.article<{
     height: var(--cardH);
   }
 
-  ${media.mobile} {
-    position: relative;
-    inset: auto;
-    transform: none;
+ ${media.mobile} {
+  position: relative;
+  inset: auto;
+  transform: none;
 
-    width: 100%;
-    height: auto;
-  }
+  width: calc(100% - ${spacing.md} * 2);
+  margin: 0 auto;
+
+  height: auto;
+}
 `;
 
 export const Media = styled.div`
@@ -113,8 +116,8 @@ export const Media = styled.div`
   height: 100%;
 
   ${media.mobile} {
-    aspect-ratio: 4 / 5;
-    height: auto;
+    height: 100%;
+  aspect-ratio: auto;
   }
 `;
 
@@ -130,12 +133,8 @@ export const TextPanel = styled.aside<{
   height: var(--cardH);
 
   overflow: auto;
-
   padding: ${spacing.md};
-  border-radius: 18px;
 
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(10px);
 
   ${({ $side }) =>
     $side === "left"
@@ -169,17 +168,20 @@ export const TextPanel = styled.aside<{
     text-align: left;
   }
 
-  ${media.mobile} {
-    position: relative;
-    inset: auto;
-    opacity: 1;
-    
-    width: 100%;
-    height: auto;
-    overflow: visible;
+ ${media.mobile} {
+  position: relative;
+  inset: auto;
+  opacity: 1;
 
-    text-align: left;
-  }
+  width: calc(100% - ${spacing.md} * 2);
+  margin: 0 auto;
+
+  height: auto;
+  overflow: visible;
+
+  text-align: left;
+}
+
 `;
 
 export const SectionTitle = styled.h2`

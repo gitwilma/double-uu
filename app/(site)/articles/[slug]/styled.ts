@@ -1,6 +1,7 @@
 "use client";
 
 import { media } from "@/lib/styles/media";
+import { spacing } from "@/lib/styles/spacing";
 import { typography } from "@/lib/styles/typography";
 import styled from "styled-components";
 
@@ -24,10 +25,15 @@ export const Hero = styled.header`
   gap: 22px;
   align-items: start;
 
+  ${media.mobile} {
+    justify-items: center;
+  }
+
   @media (min-width: 900px) {
     grid-template-columns: 520px 1fr;
     gap: 40px;
     align-items: start;
+    justify-items: stretch;
   }
 `;
 
@@ -36,19 +42,26 @@ export const Cover = styled.figure`
   width: 100%;
   max-width: 520px;
   aspect-ratio: 3 / 4;
-  border-radius: 24px;
   overflow: hidden;
 
   box-shadow: 0 32px 70px -26px rgba(0, 0, 0, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.18);
-
   position: relative;
+
+  ${media.mobile} {
+    width: calc(100% - ${spacing.md} * 2);
+  }
 `;
 
 export const Head = styled.div`
   color: #111;
   align-self: start;
+
+  ${media.mobile} {
+    width: calc(100% - ${spacing.md} * 2);
+  }
 `;
+
 
 export const Title = styled.h1`
 font-family: var(--font-title);

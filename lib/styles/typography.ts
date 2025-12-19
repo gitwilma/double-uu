@@ -1,7 +1,7 @@
 export const typography = {
   title: {
     family: "var(--font-title)",
-    weight: 400,
+    weight: 300,
     tracking: "-0.03em",
   },
   body: {
