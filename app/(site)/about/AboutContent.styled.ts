@@ -129,6 +129,10 @@ export const SectionImage = styled.figure`
 
   box-shadow: 0 32px 70px -26px rgba(0, 0, 0, 0.55);
   border: 1px solid rgba(255, 255, 255, 0.18);
+
+  ${media.mobile} {
+    box-shadow: 0 20px 70px -26px rgba(0, 0, 0, 0.55);
+  }
 `;
 
 export const SectionText = styled.div`
@@ -137,7 +141,6 @@ export const SectionText = styled.div`
   overflow: auto;
 
   padding: ${spacing.lg};
-  border-radius: 24px;
   position: relative;
 
   ${media.tablet} {
@@ -148,10 +151,6 @@ export const SectionText = styled.div`
     aspect-ratio: auto;
     overflow: visible;
     padding: 0;
-    background: transparent;
-    border: none;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
   }
 
   h2 {

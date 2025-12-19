@@ -51,7 +51,10 @@ export function HamburgerMenu({
     { label: "ABOUT", href: "/about" },
   ],
   midTitle = "Redaktör ☀ Utvecklare",
-  midText = "lorem ipsum lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum.",
+  midText = `Double UU är ett digitalt modemagasin utvecklat av mig, Wilma, som en del av mitt examensarbete inom frontendutveckling.
+
+För den modeintresserade som söker eftertanke, kvalitet och nya perspektiv, som ett alternativ till den konsumtionshets som ofta präglar andra modeplattformar.`,
+
   avatarSrc = "/profile-pic.png",
   linkedinUrl = "https://www.linkedin.com/in/wilma-håkansson-7374a3234",
   githubUrl = "https://github.com/gitwilma/double-uu",

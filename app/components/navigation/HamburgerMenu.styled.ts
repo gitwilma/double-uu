@@ -196,6 +196,7 @@ export const MidTitle = styled.div`
 export const MidText = styled.p`
   margin: 0;
   font-family: ${typography.body.family};
+  white-space: pre-line;
   color: rgba(0, 0, 0, 0.85);
   font-size: 13px;
   line-height: 1.35;
