@@ -144,7 +144,7 @@ export const TextPanel = styled.aside<{
         `
       : css`
           right: calc(var(--edge) + var(--cardW) + var(--gap));
-          text-align: right;
+          text-align: left;
         `}
 
   ${({ $progress }) => {
