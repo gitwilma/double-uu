@@ -39,8 +39,8 @@ export const BurgerButton = styled.button`
   display: grid;
   place-items: center;
 
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  backdrop-filter: blur(6px);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: none;
 
   &:hover {
     opacity: 0.9;
@@ -109,7 +109,13 @@ export const Drawer = styled.aside<{ $open: boolean }>`
   height: 100vh;
 
   width: min(360px, 88vw);
-  background: #ece9e3;
+
+  background:
+    radial-gradient(70% 70% at 50% 50%, #F5A4DF 0%, transparent 60%),
+    radial-gradient(60% 50% at 40% 20%, #efefef 0%, transparent 60%),
+    radial-gradient(45% 45% at 25% 75%, #efefef 0%, transparent 65%),
+    #efefef;
+
   border-right: 2px solid rgba(0, 0, 0, 0.35);
 
   display: flex;
@@ -123,6 +129,26 @@ export const Drawer = styled.aside<{ $open: boolean }>`
   z-index: 66;
   pointer-events: ${({ $open }) => ($open ? "auto" : "none")};
   visibility: ${({ $open }) => ($open ? "visible" : "hidden")};
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 1.4 -0.2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    background-size: 260px 260px;
+    background-repeat: repeat;
+    mix-blend-mode: soft-light;
+    opacity: 0.75;
+    filter: contrast(160%) brightness(105%);
+  }
+  > * {
+    position: relative;
+    z-index: 1;
+  }
 `;
 
 export const Nav = styled.nav`
@@ -160,9 +186,10 @@ export const MidBlock = styled.div`
 `;
 
 export const MidTitle = styled.div`
-  font-weight: 800;
+  font-family: ${typography.title.family};
+  font-weight: 700;
   color: #111;
-  font-size: 14px;
+  font-size: 22px;
   letter-spacing: 0.02em;
 `;
 
@@ -176,11 +203,18 @@ export const MidText = styled.p`
 
 export const Bottom = styled.div`
   padding-top: 12px;
+  background: rgba(255, 255, 255, 0.22);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px;
+
+  padding: ${spacing.md};
 `;
 
+
 export const BottomTitle = styled.div`
-  font-weight: 900;
-  font-size: 30px;
+  font-family: ${typography.title.family};
+  font-weight: 700;
+  font-size: 28px;
   color: #111;
   line-height: 1;
 `;
@@ -214,9 +248,9 @@ export const ActionButton = styled.button`
 
 export const FooterCopy = styled.div`
   margin-top: 12px;
-  margin-bottom: 28px;
+  margin-bottom: 8px;
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.65);
+  color: rgba(0, 0, 0, 0.58);
 `;
 
 export const MidAvatar = styled.div`

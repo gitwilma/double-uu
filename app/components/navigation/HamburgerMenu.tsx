@@ -50,7 +50,7 @@ export function HamburgerMenu({
     { label: "MAGAZINE", href: "/articles" },
     { label: "ABOUT", href: "/about" },
   ],
-  midTitle = "Redaktör och utvecklare",
+  midTitle = "Redaktör ☀ Utvecklare",
   midText = "lorem ipsum lorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsumlorem ipsum.",
   avatarSrc = "/profile-pic.png",
   linkedinUrl = "https://www.linkedin.com/in/wilma-håkansson-7374a3234",
@@ -195,7 +195,7 @@ export function HamburgerMenu({
           </MidBlock>
 
           <Bottom>
-            <BottomTitle>Footer</BottomTitle>
+            <BottomTitle>Double UU</BottomTitle>
 
             <SmallLinks aria-label="Footer actions">
               <ActionButton

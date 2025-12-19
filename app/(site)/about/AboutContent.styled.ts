@@ -86,7 +86,7 @@ export const MetaRow = styled.p`
 
 export const Section = styled.section<{ $flip: boolean }>`
   display: grid;
-  gap: ${spacing.lg};
+  gap: ${spacing.md};
   margin: ${spacing.xxl} 0;
 
   grid-template-columns: 1fr 1fr;
@@ -125,7 +125,6 @@ export const SectionImage = styled.figure`
   position: relative;
   width: 100%;
   aspect-ratio: 4 / 5;
-  border-radius: 24px;
   overflow: hidden;
 
   box-shadow: 0 32px 70px -26px rgba(0, 0, 0, 0.55);
@@ -139,14 +138,7 @@ export const SectionText = styled.div`
 
   padding: ${spacing.lg};
   border-radius: 24px;
-
   position: relative;
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-
-  scrollbar-gutter: stable both-edges;
 
   ${media.tablet} {
     padding: ${spacing.md};

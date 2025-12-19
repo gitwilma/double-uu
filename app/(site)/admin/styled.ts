@@ -27,7 +27,7 @@ export const TopBar = styled.header`
 `;
 
 export const Title = styled.h1`
-  margin: 0;
+  margin-top: 40px;
   font-size: 22px;
   font-weight: 800;
   letter-spacing: -0.02em;
