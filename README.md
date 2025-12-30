@@ -1,36 +1,144 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Double UU – Digitalt modemagasin
 
-## Getting Started
+Double UU är ett digitalt modemagasin utvecklat som en del av mitt examensarbete inom frontendutveckling. Projektet utforskar mode ur ett reflekterande och kritiskt perspektiv, med fokus på kvalitet, eftertanke och de strukturer som präglar dagens modeindustri snarare än konsumtionsdrivna trender.
 
-First, run the development server:
+Magasinet är inspirerat av traditionella modemagasin men översatt till ett digitalt format. Genom scroll, bildsekvenser och textblock ges innehållet tid och utrymme, med ambitionen att skapa ett lugnare och mer eftertänksamt möte med mode.
+
+---
+
+## Live demo
+
+Deployad version av projektet:  
+https://double-uu.vercel.app/
+
+---
+
+## Tech stack
+
+Projektet är byggt med följande tekniker och verktyg:
+
+- Next.js (React)
+- TypeScript
+- styled-components
+- React state samt global state-lösning
+- MongoDB
+- NextAuth för autentisering
+- Figma för design och prototyp
+- Git och GitHub för versionshantering
+- Vercel för deploy
+
+---
+
+## Installation och körning lokalt
+
+### Förutsättningar
+
+- Node.js version 18 eller senare
+- npm eller yarn
+- Ett MongoDB-konto (t.ex. MongoDB Atlas) för lagring av innehåll
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/gitwilma/double-uu.git
+cd double-uu
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Miljövariabler
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Skapa en .env.local i projektets rotmapp och fyll i nödvändiga variabler:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+DATABASE_URL= MongoDB-anslutningssträng
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
 
-## Learn More
+### Starta projektet
 
-To learn more about Next.js, take a look at the following resources:
+npm run dev
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Applikationen körs lokalt på http://localhost:3000.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Design och prototyp
 
-## Deploy on Vercel
+Wireframes och prototyp har skapats i Figma.
+Designen följer etablerade UX/UI-principer och är konsekvent genom applikationen.
+Layouten är responsiv och anpassad för mobil, tablet och desktop.
+Projektet följer WCAG 2.1-standarder för nivå A och AA.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Tillgänglighet
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Projektet är utvecklat med tillgänglighet i fokus:
+
+Semantisk HTML
+
+God färgkontrast
+
+Tangentbordsnavigering
+
+ARIA-attribut där det är relevant
+
+### Funktionalitet
+
+Applikationen innehåller följande funktionalitet:
+
+Dynamiskt innehåll hämtat från databas
+
+Artiklar med sektioner, bilder och text
+
+Responsiv layout för olika skärmstorlekar
+
+CRUD-funktionalitet för innehåll
+
+Säker autentisering för adminfunktioner
+
+State-hantering för interaktivitet och UI-logik
+
+### Arbetsprocess
+
+Projektet har planerats och strukturerats med hjälp av ett Kanban Board i GitHub Projects. Arbetet har delats upp i research, design, utveckling och iteration. Commit-historiken dokumenterar arbetsprocessen steg för steg.
+
+### Checklista – Betygskriterier
+## Godkänt (G)
+
+ Målgruppsanalys genomförd
+
+ Projekthanteringsverktyg använt
+
+ Wireframes och prototyp i Figma
+
+ Responsiv design för minst två skärmstorlekar
+
+ WCAG 2.1 nivå A och AA följs
+
+ Modernt JavaScript-ramverk
+
+ Databas för lagring och hämtning av data
+
+ State-hantering och dynamiska komponenter
+
+ Semantisk HTML
+
+ Git och GitHub-repo
+
+ Deployad och publikt tillgänglig applikation
+
+ README enligt projektbeskrivningen
+
+## Väl Godkänt (VG)
+
+ Interaktiv prototyp mycket lik slutprodukt
+
+ Optimerad kod och återanvändbara komponenter
+
+ CRUD-operationer med säker datahantering
+
+ Säker autentisering
+
+ Fullt responsiv för flera skärmstorlekar
+
+ Tydliga och informativa commit-meddelanden
+
+ Automatiserad build och deploy
+
+ Djupgående slutrapport
