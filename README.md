@@ -59,6 +59,20 @@ npm run dev
 
 Applikationen körs lokalt på http://localhost:3000.
 
+
+### Adminfunktioner
+
+Admin inloggning och utloggning nås via hamburger-menyn.  
+Avsiktligt är dessa knappar placerade längre ned i menyn för att skilja administrativa funktioner från det redaktionella innehållet och den publika navigationen.
+
+För att logga in som admin:
+- Öppna hamburger-menyn
+- Scrolla ned till nederdelen av menyn
+- Klicka på **Admin Login**
+
+När du är inloggad visas istället knappen **Log out** på samma plats.
+
+
 ### Design och prototyp
 
 Wireframes och prototyp har skapats i Figma.
