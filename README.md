@@ -99,46 +99,73 @@ State-hantering för interaktivitet och UI-logik
 Projektet har planerats och strukturerats med hjälp av ett Kanban Board i GitHub Projects. Arbetet har delats upp i research, design, utveckling och iteration. Commit-historiken dokumenterar arbetsprocessen steg för steg.
 
 ### Checklista – Betygskriterier
-## Godkänt (G)
+## Checklista – Betygskriterier
 
- Målgruppsanalys genomförd
+### Godkänt (G)
 
- Projekthanteringsverktyg använt
+#### Planering och Research
+- [x] Utföra en noggrann målgruppsanalys.
+- [x] Använda ett projekthanteringsverktyg för backlog (t.ex. GitHub Projects).
 
- Wireframes och prototyp i Figma
+#### Design och Prototyping
+- [x] Skapa wireframes och prototyp i Figma som följer UX/UI-principer.
+- [x] Se till att designen är responsiv för minst två olika skärmstorlekar och följer WCAG 2.1-standarder.
 
- Responsiv design för minst två skärmstorlekar
+#### Applikationsutveckling
+- [x] Utveckla med ett modernt JavaScript-ramverk.
+- [x] Använd en databas för lagring och hämtning av data.
+- [x] Implementera state-hantering och skapa dynamiska komponenter med reaktivitet och interaktivitet.
+- [x] Följa WCAG 2.1-standarder och använda semantisk HTML.
+- [x] För webbapp: Produkten ska vara responsiv och fungera korrekt på minst två skärmstorlekar (t.ex. mobil och dator).
+- [x] README-fil med innehåll enligt projektbeskrivningen (hur projektet körs, publik länk, checklista).
 
- WCAG 2.1 nivå A och AA följs
+#### Versionshantering
+- [x] Arbeta med Git och ha ett repo på GitHub.
 
- Modernt JavaScript-ramverk
+#### Slutrapport (2–3 sidor)
+- [x] Abstract på engelska.
+- [x] Tech stack och motivering av valen.
+- [x] Dokumentation av arbetsprocess, planering och research.
 
- Databas för lagring och hämtning av data
+#### Deploy
+- [x] Projektet är hostat och publikt tillgängligt.
 
- State-hantering och dynamiska komponenter
+#### Helhetsupplevelsen
+- [x] Applikationen är fri från tekniska fel såsom döda länkar eller kraschande sidor, har en konsekvent design och möjliggör en obruten navigation genom hela applikationen.
 
- Semantisk HTML
+---
 
- Git och GitHub-repo
+### Väl Godkänd (VG)
 
- Deployad och publikt tillgänglig applikation
+#### Allt för Godkänt (G)
+- [x] Samtliga krav för G är uppfyllda.
 
- README enligt projektbeskrivningen
+#### Design och prototyping
+- [ ] Implementera interaktivitet i prototypen för att demonstrera hur användaren interagerar med produkten.
+- [x] Prototypen ska vara väldigt lik den färdiga produkten.
+- [x] Designen följer, utan undantag, WCAG 2.1-standarder för nivå A och AA.
 
-## Väl Godkänt (VG)
+#### Applikationsutveckling
+- [ ] Använd en state management-lösning (t.ex. Redux eller Pinia) för global state.
+- [ ] Koden följer, utan undantag, WCAG 2.1-standarder för nivå A och AA.
+- [ ] Testad i WebAIM WAVE utan fel på error- och varningsnivåer.
+- [ ] Optimering: Produkten ska vara optimerad (filformat/storlekar), återanvända kod/komponenter och använda optimeringstekniker där det behövs.
+- [x] Implementera CRUD-operationer (Create, Read, Update, Delete) med säker hantering av användardata.
+- [x] Implementera en säker autentiseringslösning för databasen (t.ex. OAuth/JWT/Firebase Authentication).
+- [ ] För webbapp: Produkten ska vara fullt responsiv och anpassa sig dynamiskt till olika skärmstorlekar och enheter.
+- [x] Skriv en tydlig README som inte bara beskriver hur projektet körs, utan också förklarar tekniska val och hur olika funktioner implementerats.
 
- Interaktiv prototyp mycket lik slutprodukt
+#### Versionshantering
+- [ ] Arbeta med feature branches och gör pull requests innan merge till baskod.
+- [x] Dokumentera varje steg i commit-historiken med tydliga och informativa commit-meddelanden.
 
- Optimerad kod och återanvändbara komponenter
+#### Deploy
+- [x] Automatiserat flöde för bygge och deploy (build triggar publicering utan manuell inblandning).
 
- CRUD-operationer med säker datahantering
+#### Slutrapport (3–6 sidor)
+- [x] Djupgående analys av arbetsprocessen med reflektion över utmaningar, lösningar och lärdomar.
+- [x] Inkludera detaljer om verktyg och tekniker samt motivera valen (t.ex. varför React istället för Vue).
+- [x] Förklara och motivera UX/UI- och tillgänglighetsbeslut och hur dessa förbättrar användarupplevelsen.
 
- Säker autentisering
-
- Fullt responsiv för flera skärmstorlekar
-
- Tydliga och informativa commit-meddelanden
-
- Automatiserad build och deploy
-
- Djupgående slutrapport
+#### Helhetsupplevelsen
+- [ ] Professionell och optimerad användarupplevelse med minimala laddningstider, tydlig återkoppling vid interaktioner samt testad för enhetlig funktion och design på flera enheter och webbläsare.
