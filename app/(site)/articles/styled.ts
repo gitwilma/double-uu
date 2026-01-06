@@ -206,12 +206,12 @@ export const TitleBlock = styled.div<{
     $side === "left"
       ? css`
           left: calc(var(--edge) + var(--cardW) + var(--gap));
-          top: 18vh;
+          top: calc(50% - (var(--cardH) / 2));
           text-align: left;
         `
       : css`
           right: calc(var(--edge) + var(--cardW) + var(--gap));
-          bottom: 16vh;
+          bottom: calc(50% - (var(--cardH) / 2));
           text-align: right;
         `}
 
@@ -226,7 +226,7 @@ export const TitleBlock = styled.div<{
       will-change: opacity;
     `;
   }}
-
+  
   ${media.tablet} {
     position: relative;
     left: auto;
@@ -278,6 +278,7 @@ export const TitleBlock = styled.div<{
     }
   }
 `;
+
 
 export const CardLink = styled(Link)`
   display: contents;
